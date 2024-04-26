@@ -13,10 +13,10 @@ export default function Signup() {
                     Home page
                 </Button>
             </div>
-            <div className='flex items-center justify-center'>
-            {/* login rectangle */}
+            <div className='flex items-center justify-center h-850'>
+            {/* signup rectangle */}
                 <div style={{fontFamily: "Montserrat, sans-serif",}} className='bg-white flex h-850 rounded-3xl w-600 '>
-                    {/* Login form */}
+                    {/* signup form */}
                     
                 </div>
             </div>

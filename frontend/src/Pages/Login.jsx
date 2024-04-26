@@ -36,9 +36,8 @@ export default function Login() {
                         </div>
                         {/* Remember me and Forgot password */}
                         <div className='flex justify-between mt-2'>
-                            <div className='flex text-left gap-1'>
-                                <input type='checkbox'/>
-                                <label>Remember me</label>
+                            <div className='flex text-left'>
+                                <label><input className='mr-0.5' type='checkbox'/>Remember me</label>
                             </div>
                             <div className='text-right'>
                                 <Button className='text-custom-lightGreen'>Forgot Password?</Button>
