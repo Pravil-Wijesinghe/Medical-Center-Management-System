@@ -9,9 +9,12 @@ module.exports = {
         'custom-lightGreen': '#62BD56',
         'custom-darkGreen': '#0E9549',
         'custom-blackGreen': '#344837',
+        'custom-red': '#C02027',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
 }
 

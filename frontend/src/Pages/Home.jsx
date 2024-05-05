@@ -3,6 +3,7 @@ import bgImage1 from '../Images/bgImage1.png'
 import bgImage2 from '../Images/bgImage2.png'
 import NavBar from '../Components/NavBar'
 
+
 function Home() {
   return (
     <div style={{fontFamily: "Montserrat, sans-serif",}} className='bg-gradient-to-r from-custom-darkGreen to-custom-blackGreen w-full h-full relative opacity-95'>
