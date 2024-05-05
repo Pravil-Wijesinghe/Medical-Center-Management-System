@@ -6,24 +6,28 @@ import { Button } from './Button';
 
 function NavBar() {
   return (
-    <nav style={{fontFamily: "Montserrat, sans-serif",}} className='flex space-x-0.5 items-center p-8 shadow-xl w-11/12 h-20 rounded-3xl bg-white'>
-        <Link>
-            <img className='h-12' src={Logo} alt='Logo'/>
-        </Link>
-        <ul className='grid grid-cols-4 grid-flow-col gap-5 items-center'>
-            {MenuItems.map((item, index) => {
-                return(
-                    <li>
-                        <Link className='text-gray-700 font-medium py-3 px-4 whitespace-nowrap transition-transform hover:text-custom-darkGreen scale-125 '>
-                            {item.title}
-                        </Link>
-                    </li>
-                )
-            })}
-            <Button className='bg-custom-darkGreen rounded-md text-white py-1 px-2.5'>Signup</Button>
-            <Button className='bg-custom-darkGreen rounded-md text-white py-1 px-2.5'>Login</Button>  
-        </ul>
-    </nav>
+    <div className='flex pt-2.5 justify-center h-screen'>
+        <nav style={{fontFamily: "Montserrat, sans-serif",}} className='flex  justify-between items-center p-8 shadow-xl w-8/12 h-16 rounded-xl bg-white/95'>
+            <Link>
+                <img className='h-10' src={Logo} alt='Logo'/>
+            </Link>
+            <ul className='flex items-center space-x-9'>
+                    {MenuItems.map((item, index) => {
+                        return(
+                            <li key={index}>
+                                <Link className='text-gray-700 font-medium text-sm py-3 items-center whitespace-nowrap transition-transform hover:text-custom-darkGreen '>
+                                    {item.title}
+                                </Link>
+                            </li>
+                        )
+                    })}
+            </ul>
+            <div className='flex items-center space-x-4'>
+                <Button className='bg-custom-darkGreen rounded-md text-white py-1 px-2.5 hover:bg-custom-blackGreen'>Signup</Button>
+                <Button className='bg-custom-darkGreen rounded-md text-white py-1 px-2.5 hover:bg-custom-blackGreen'>Login</Button>  
+            </div>
+        </nav>
+    </div>
   )
 }
 
