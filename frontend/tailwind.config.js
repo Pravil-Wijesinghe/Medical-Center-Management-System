@@ -12,6 +12,9 @@ module.exports = {
         'custom-red': '#C02027',
       },
     },
+    fontFamily: {
+      'montserrat': ["Montserrat", "sans-serif"],
+    }
   },
   plugins: [
     require('tailwind-scrollbar'),
