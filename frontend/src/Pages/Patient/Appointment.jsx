@@ -1,7 +1,58 @@
+import React, { useState } from 'react';
 import Background from '../../Components/Background.jsx';
+import { Button } from '../../Components/Button.jsx';
 import PatientNavBar from '../../Components/PatientNavBar.jsx';
+import {TrashIcon} from '@heroicons/react/outline';
 
 function Appointment() {
+  const [selectAll, setSelectAll] = useState(false);
+  const [selectedAppointments, setSelectedAppointments] = useState([]);
+  const [appointments, setAppointments] = useState([
+    { id: 1, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
+    { id: 2, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
+    { id: 3, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
+    { id: 4, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
+    { id: 5, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
+    { id: 6, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
+    { id: 7, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
+    { id: 8, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
+    { id: 9, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
+    { id: 10, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
+    // ...add other appointments here
+  ]);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+    if (!selectAll) {
+      setSelectedAppointments(appointments.map(appt => appt.id));
+    } else {
+      setSelectedAppointments([]);
+    }
+  };
+
+  const handleSelectAppointment = (id) => {
+    if (selectedAppointments.includes(id)) {
+      setSelectedAppointments(selectedAppointments.filter(apptId => apptId !== id));
+    } else {
+      setSelectedAppointments([...selectedAppointments, id]);
+    }
+  };
+
+  const handleRemoveSelected = () => {
+    setShowModal(true);
+  };
+
+  const confirmRemove = () => {
+    setAppointments(appointments.filter(appt => !selectedAppointments.includes(appt.id)));
+    setSelectedAppointments([]);
+    setSelectAll(false);
+    setShowModal(false);
+  };
+
+  const cancelRemove = () => {
+    setShowModal(false);
+  };
 
   return (
     <div className='relative text-white font-montserrat'>
@@ -16,34 +67,61 @@ function Appointment() {
           </div>
           <div className='relative flex flex-col items-center mt-[60px] pb-12 overflow-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent'>
             <div className='mt-5'>
-              <table className='table-auto'>
-              <thead>
-                <tr className='flex gap-24 text-lg bg-white shadow-xl py-2 px-28 rounded-lg'>
-                  <th></th>
-                  <th className='font-semibold'>Appointment Number</th>
-                  <th className='font-semibold'>Date</th>
-                  <th className='font-semibold'>Time</th>
-                  <th className='font-semibold'>Doctor</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className='flex gap-24 bg-white shadow-xl py-2 px-28 rounded-lg mt-5'>
-                  <td>
-                    <input type='checkbox'/>
-                  </td>
-                  <td>1</td>
-                  <td>01/02/2024</td>
-                  <td>12:20 P.M.</td>
-                  <td>Dr. Priyantha</td>
-                </tr>
-              </tbody>
+              <table className='table-auto border-separate border-spacing-y-2'>
+                <thead>
+                  <tr className='text-lg bg-white shadow-xl'>
+                    <th className='py-2 px-8 rounded-l-lg'>
+                      <input type='checkbox' checked={selectAll} onChange={handleSelectAll} />
+                    </th>
+                    <th className='font-semibold py-2'>Appointment Number</th>
+                    <th className='font-semibold py-2'>Date</th>
+                    <th className='font-semibold py-2'>Time</th>
+                    <th className='font-semibold py-2 rounded-r-lg'>Doctor</th>
+                  </tr>
+                </thead>
+                <tbody className='text-sm'>
+                  {appointments.map((appointment, index) => (
+                    <tr key={index} className='bg-white shadow-xl py-2 px-28 mt-5 rounded-lg'>
+                      <td className='px-8 py-3 rounded-l-lg'>
+                        <input type='checkbox' checked={selectedAppointments.includes(appointment.id)} onChange={() => handleSelectAppointment(appointment.id)} />
+                      </td>
+                      <td className='px-10 py-3'>{appointment.id}</td>
+                      <td className='px-12 py-3'>{appointment.date}</td>
+                      <td className='px-12 py-3'>{appointment.time}</td>
+                      <td className='px-12 py-3 rounded-r-lg'>{appointment.doctor}</td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
+              <div className='flex flex-col items-center mt-5'>
+                <Button className="bg-custom-darkGreen text-white text-sm font-medium px-3 py-2 rounded-md w-32 hover:bg-custom-blackGreen" onClick={handleRemoveSelected}>
+                  Remove
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {showModal && (
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='flex flex-col items-center bg-white p-6 rounded-lg text-black'>
+            <TrashIcon className='w-16 h-16 text-red-600 mb-2'/>
+            <h2 className='text-xl font-bold'>Confirm Delete</h2>
+            <p className='mt-4'>Are you sure you want to delete the selected appointments?</p>
+            <div className='mt-6 flex justify-end'>
+              <Button className="outline outline-2 outline-offset-0 outline-custom-darkGreen text-black text-sm font-medium px-4 py-2 rounded-md mr-2" onClick={cancelRemove}>
+                Cancel
+              </Button>
+              <Button className="outline outline-2 outline-offset-0 outline-red-600 bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-md" onClick={confirmRemove}>
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default Appointment
+export default Appointment;
