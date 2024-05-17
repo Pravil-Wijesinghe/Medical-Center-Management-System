@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Background from '../../Components/Background.jsx';
 import { Button } from '../../Components/Button.jsx';
 import PatientNavBar from '../../Components/PatientNavBar.jsx';
-import {TrashIcon} from '@heroicons/react/outline';
+import { TrashIcon, XIcon } from '@heroicons/react/outline';
+import MakeAnAppontment from '../../Components/MakeAnAppontment.jsx';
 
 function Appointment() {
   const [selectAll, setSelectAll] = useState(false);
@@ -21,6 +22,7 @@ function Appointment() {
     // ...add other appointments here
   ]);
   const [showModal, setShowModal] = useState(false);
+  const [makeAppointment, setMakeAppointment] = useState(false);
 
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
@@ -43,6 +45,10 @@ function Appointment() {
     setShowModal(true);
   };
 
+  const handleMakeAppointment = () => {
+    setMakeAppointment(true);
+  }
+
   const confirmRemove = () => {
     setAppointments(appointments.filter(appt => !selectedAppointments.includes(appt.id)));
     setSelectedAppointments([]);
@@ -54,11 +60,15 @@ function Appointment() {
     setShowModal(false);
   };
 
+  const closeMakeAppointment = () => {
+    setMakeAppointment(false);
+  };
+
   return (
     <div className='relative text-white font-montserrat'>
-      <Background/>
+      <Background />
       <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full'>
-        <PatientNavBar/>
+        <PatientNavBar />
       </div>
       <div className='flex items-center justify-center'>
         <div className='absolute top-[90px] bg-white text-black flex flex-col w-[68%] h-[80%] rounded-3xl mt-4 '>
@@ -102,11 +112,31 @@ function Appointment() {
           </div>
         </div>
       </div>
+      <div className='fixed bottom-5 right-4'>
+        <Button className='text-black hover:text-white font-medium bg-white hover:bg-custom-darkGreen px-3 py-1 rounded-full' onClick={handleMakeAppointment}>
+          Make an Appointment
+        </Button>
+      </div>
 
+      {/* Modal for Make an appointment */}
+      {makeAppointment && (
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-60'>
+          <div>
+            <MakeAnAppontment closeMakeAppointment={closeMakeAppointment} />
+          </div>
+          <div>
+            <Button className='fixed top-5 right-4' onClick={closeMakeAppointment}>
+              <XIcon className='w-8 h-8 text-white' />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for confirm Remove */}
       {showModal && (
         <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
           <div className='flex flex-col items-center bg-white p-6 rounded-lg text-black'>
-            <TrashIcon className='w-16 h-16 text-red-600 mb-2'/>
+            <TrashIcon className='w-16 h-16 text-red-600 mb-2' />
             <h2 className='text-xl font-bold'>Confirm Delete</h2>
             <p className='mt-4'>Are you sure you want to delete the selected appointments?</p>
             <div className='mt-6 flex justify-end'>

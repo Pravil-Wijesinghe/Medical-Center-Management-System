@@ -4,6 +4,7 @@ import Signup from './Pages/Signup';
 import Home from './Pages/Home';
 import PatientProfile from './Pages/Patient/Profile';
 import PatientAppointment from './Pages/Patient/Appointment';
+import PatientFamilyMembers from './Pages/Patient/FamilyMembers';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path='/Home' element={<Home/>}></Route>
           <Route path='/PatientProfile' element={<PatientProfile/>}></Route>
           <Route path='/PatientAppointment' element={<PatientAppointment/>}></Route>
+          <Route path='/PatientFamilyMembers' element={<PatientFamilyMembers/>}></Route>
         </Routes>
       </BrowserRouter>
       
