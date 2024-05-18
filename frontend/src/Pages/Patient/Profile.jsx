@@ -31,7 +31,7 @@ function Profile() {
           <div className='absolute bg-custom-blackGreen h-16 w-full top-0 rounded-3xl flex flex-col items-center justify-center'>
             <h2 className='text-2xl font-semibold text-white'>Profile</h2>
           </div>
-          <div className='relative mt-[60px] pb-12 overflow-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent'>
+          <div className='relative mt-[60px] pb-12 px-12 overflow-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent'>
             <div className='flex flex-row items-center gap-6 p-8 ml-3'>
               <div onClick={handleImageClick} className='flex items-center justify-center border-0 w-20 h-20 overflow-hidden border-black rounded-full'>
                 {image ?
