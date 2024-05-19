@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Background from '../../Components/Background';
 import PatientNavBar from '../../Components/PatientNavBar';
 import {Button} from '../../Components/Button';
-import {TrashIcon} from '@heroicons/react/outline';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 function FamilyMembers() {
 

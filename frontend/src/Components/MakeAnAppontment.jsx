@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import dayjs from "dayjs";
 import { generateDate, months } from './calender';
 import cn from './cn';
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/outline';
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { Button } from './Button';
 
 function MakeAnAppontment({ closeMakeAppointment }) {

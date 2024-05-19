@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Background from '../../Components/Background.jsx';
 import { Button } from '../../Components/Button.jsx';
 import PatientNavBar from '../../Components/PatientNavBar.jsx';
-import { TrashIcon, XIcon } from '@heroicons/react/outline';
+import { TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import MakeAnAppontment from '../../Components/MakeAnAppontment.jsx';
 
 function Appointment() {
@@ -126,7 +126,7 @@ function Appointment() {
           </div>
           <div>
             <Button className='fixed top-5 right-4' onClick={closeMakeAppointment}>
-              <XIcon className='w-8 h-8 text-white' />
+              <XMarkIcon className='w-8 h-8 text-white' />
             </Button>
           </div>
         </div>

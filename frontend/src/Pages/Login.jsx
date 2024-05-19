@@ -2,7 +2,7 @@
 import React, {useState} from 'react'
 import bgImage2 from '../Images/bgImage2.png'
 import { Button } from '../Components/Button'
-import { ChevronLeftIcon } from '@heroicons/react/outline';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import validation from '../Validation/LoginValidation'
 
