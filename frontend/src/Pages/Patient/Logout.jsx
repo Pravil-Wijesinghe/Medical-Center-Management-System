@@ -1,15 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 import Background from '../../Components/Background';
 import PatientNavBar from '../../Components/PatientNavBar';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Button } from '../../Components/Button';
 
 function Logout() {
-  const navigate = useNavigate(); // Initialize the navigation hook
+  const navigate = useNavigate();
 
   const handleCancel = () => {
-    navigate('/PatientProfile'); // Navigate to the PatientProfile route
+    navigate('/PatientProfile');
   };
 
   return (

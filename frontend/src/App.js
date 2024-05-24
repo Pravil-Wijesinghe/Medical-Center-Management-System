@@ -7,6 +7,7 @@ import PatientAppointment from './Pages/Patient/Appointment';
 import PatientFamilyMembers from './Pages/Patient/FamilyMembers';
 import PatientResetPassword from './Pages/Patient/ResetPassword';
 import PatientLogout from './Pages/Patient/Logout';
+import DoctorProfile from './Pages/Doctor/Profile';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path='/PatientFamilyMembers' element={<PatientFamilyMembers/>}></Route>
           <Route path='/PatientResetPassword' element={<PatientResetPassword/>}></Route>
           <Route path='/PatientLogout' element={<PatientLogout/>}></Route>
+          <Route path='/DoctorProfile' element={<DoctorProfile/>}></Route>
         </Routes>
       </BrowserRouter>
       
