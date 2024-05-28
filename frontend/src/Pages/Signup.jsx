@@ -37,21 +37,12 @@ export default function Signup() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    nicNumber: formData.nicNumber,
-                    mobileNumber: formData.mobileNumber,
-                    email: formData.email,
-                    dateOfBirth: formData.dateOfBirth,
-                    gender: formData.gender,
-                    password: formData.password
-                }),
+                body: JSON.stringify(formData),
             });
 
             if (response.ok) {
                 alert('Sign-up successful');
-                navigate('/PatientProfile');
+                navigate('/login');
             } else {
                 const errorData = await response.json();
                 alert(`Sign-up failed: ${errorData.message}`);
@@ -83,15 +74,15 @@ export default function Signup() {
                         </div>
                         <div className='mt-3'>
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>First Name</h2>
-                            <input type='text' name='firstName' value={formData.firstName} onChange={handleChange} className='rounded-md border-2 h-9 w-[340px] p-2 outline-none' placeholder='Enter your first name'/>
+                            <input type='text' name='firstName' value={formData.firstName} onChange={handleChange} className='rounded-md border-2 h-9 w-[340px] p-2 outline-none' placeholder='Enter your first name' required/>
                         </div>
                         <div className='mt-3'>
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>Last Name</h2>
-                            <input type='text' name='lastName' value={formData.lastName} onChange={handleChange} className='rounded-md border-2 h-9 w-[340px] p-2 outline-none' placeholder='Enter your last name'/>
+                            <input type='text' name='lastName' value={formData.lastName} onChange={handleChange} className='rounded-md border-2 h-9 w-[340px] p-2 outline-none' placeholder='Enter your last name' required/>
                         </div>
                         <div className='mt-3'>
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>NIC Number</h2>
-                            <input type='text' name='nicNumber' value={formData.nicNumber} onChange={handleChange} className='rounded-md border-2 h-9 w-[340px] p-2 outline-none' placeholder='Enter your NIC number'/>
+                            <input type='text' name='nicNumber' value={formData.nicNumber} onChange={handleChange} className='rounded-md border-2 h-9 w-[340px] p-2 outline-none' placeholder='Enter your NIC number' required/>
                         </div>
                         <div className='mt-3'>
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>Mobile Number</h2>
@@ -107,8 +98,8 @@ export default function Signup() {
                                 <h2 className='text-base font-semibold mb-0.5 ml-[10px]'>Gender</h2>
                             </div>
                             <div className='flex gap-5'>
-                                <input type='date' name='dateOfBirth' value={formData.dateOfBirth} onChange={handleChange} className='rounded-md border-2 h-9 w-[175px] p-2 outline-none'/>
-                                <select id='gender' name='gender' value={formData.gender} onChange={handleChange} className='rounded-md border-2 h-9 w-[140px] p-2 outline-none'>
+                                <input type='date' name='dateOfBirth' value={formData.dateOfBirth} onChange={handleChange} className='rounded-md border-2 h-9 w-[175px] p-2 outline-none' required/>
+                                <select id='gender' name='gender' value={formData.gender} onChange={handleChange} className='rounded-md border-2 h-9 w-[140px] p-2 outline-none' required>
                                     <option>Male</option>
                                     <option>Female</option>
                                 </select>
@@ -116,15 +107,15 @@ export default function Signup() {
                         </div>
                         <div className='mt-3 relative'>
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>Password</h2>
-                            <input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleChange} className='w-full rounded-md border-2 h-9 p-2 outline-none' placeholder='Enter your password'/>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pt-6 cursor-pointer" onClick={toggleShowPassword}>
+                            <input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleChange} className='w-full rounded-md border-2 h-9 p-2 outline-none' placeholder='Enter your password' required/>
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={toggleShowPassword}>
                                 {showPassword ? <EyeSlashIcon className="h-6 w-6 text-gray-700" /> : <EyeIcon className="h-6 w-6 text-gray-700" />}
                             </div>
                         </div>
                         <div className='mt-3 relative'>
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>Re-enter Password</h2>
-                            <input type={showPassword ? 'text' : 'password'} name='confirmPassword' value={formData.confirmPassword} onChange={handleChange} className='w-full rounded-md border-2 h-9 p-2 outline-none' placeholder='Re-enter your password'/>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pt-6 cursor-pointer" onClick={toggleShowPassword}>
+                            <input type={showPassword ? 'text' : 'password'} name='confirmPassword' value={formData.confirmPassword} onChange={handleChange} className='w-full rounded-md border-2 h-9 p-2 outline-none' placeholder='Re-enter your password' required/>
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={toggleShowPassword}>
                                 {showPassword ? <EyeSlashIcon className="h-6 w-6 text-gray-700" /> : <EyeIcon className="h-6 w-6 text-gray-700" />}
                             </div>
                         </div>
