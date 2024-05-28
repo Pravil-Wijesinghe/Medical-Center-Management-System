@@ -7,8 +7,7 @@ import NavBar from '../Components/NavBar'
 function Home() {
   return (
     <div style={{fontFamily: "Montserrat, sans-serif",}} className='bg-gradient-to-r from-custom-darkGreen to-custom-blackGreen w-full h-full relative opacity-95'>
-      {/* <img src={bgImage1} alt='BackgroundImage' className='w-full h-screen object-cover' /> */}
-      <div style={{ backgroundImage: `url(${bgImage1})` }} className='w-full h-screen bg-top bg-cover bg-no-repeat relative'>
+      {/* <div style={{ backgroundImage: `url(${bgImage1})` }} className='w-full h-screen bg-top bg-cover bg-no-repeat relative'>
           <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full'>
             <NavBar/>
           </div>
@@ -23,10 +22,9 @@ function Home() {
           </div>
       </div>
       <div>
-        {/* <img src={bgImage2} alt='BackgroundImage' className='w-full h-[2000px] object-cover mix-blend-overlay'/> */}
         <div style={{ backgroundImage: `URL(${bgImage2})`}} className='w-full h-[2000px] bg-center bg-cover bg-no-repeat mix-blend-overlay'>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
