@@ -108,14 +108,14 @@ export default function Signup() {
                         <div className='mt-3 relative'>
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>Password</h2>
                             <input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleChange} className='w-full rounded-md border-2 h-9 p-2 outline-none' placeholder='Enter your password' required/>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={toggleShowPassword}>
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pt-6 cursor-pointer" onClick={toggleShowPassword}>
                                 {showPassword ? <EyeSlashIcon className="h-6 w-6 text-gray-700" /> : <EyeIcon className="h-6 w-6 text-gray-700" />}
                             </div>
                         </div>
                         <div className='mt-3 relative'>
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>Re-enter Password</h2>
                             <input type={showPassword ? 'text' : 'password'} name='confirmPassword' value={formData.confirmPassword} onChange={handleChange} className='w-full rounded-md border-2 h-9 p-2 outline-none' placeholder='Re-enter your password' required/>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={toggleShowPassword}>
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pt-6 cursor-pointer" onClick={toggleShowPassword}>
                                 {showPassword ? <EyeSlashIcon className="h-6 w-6 text-gray-700" /> : <EyeIcon className="h-6 w-6 text-gray-700" />}
                             </div>
                         </div>
