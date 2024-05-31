@@ -81,7 +81,7 @@ export default function Login() {
                             <h2 className='text-base font-semibold mb-0.5 ml-2'>Password</h2>
                             <div>
                                 <input onChange={handleInput} type={showPassword ? 'text' : 'password'} name='password' className='w-full rounded-md border-2 h-9 p-2' placeholder='Enter your password' />
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={toggleShowPassword}>
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pt-6 cursor-pointer" onClick={toggleShowPassword}>
                                     {showPassword ? <EyeSlashIcon className="h-6 w-6 text-gray-700" /> : <EyeIcon className="h-6 w-6 text-gray-700" />}
                                 </div>
                                 {errors.password && <span className='text-red-500 text-xs'>{errors.password}</span>}

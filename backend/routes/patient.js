@@ -29,8 +29,12 @@ router.put('/update', (req, res) => {
     connection.query(query, [firstName, lastName, mobileNumber, email, dob, gender, weight, height, bloodGroup, address, nic], (err, results) => {
         if (err) {
             console.error('Error updating patient data:', err);
-            return res.status(500).json({ message: 'Database error' });
+            return res.status(500).json({ message: 'Database error', error: err.sqlMessage || err });
         }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+        console.log('Patient data updated successfully:', results);
         res.status(200).json({ message: 'Patient data updated successfully' });
     });
 });
@@ -46,8 +50,12 @@ router.post('/upload', upload.single('profilePicture'), (req, res) => {
     connection.query(query, [profilePicture, nic], (err, results) => {
         if (err) {
             console.error('Error updating profile picture:', err);
-            return res.status(500).json({ message: 'Database error' });
+            return res.status(500).json({ message: 'Database error', error: err.sqlMessage || err });
         }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+        console.log('Profile picture updated successfully:', results);
         res.status(200).json({ message: 'Profile picture updated successfully', profilePicture });
     });
 });

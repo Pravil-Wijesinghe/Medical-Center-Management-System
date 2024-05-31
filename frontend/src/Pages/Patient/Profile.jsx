@@ -47,9 +47,23 @@ function Profile() {
                 },
                 body: JSON.stringify(user),
             });
+
+            const responseText = await response.text();
+            console.log('Response text:', responseText);
+
             if (!response.ok) {
-                throw new Error('Failed to update profile data');
+                let errorMessage = 'Unknown error occurred';
+                try {
+                    const errorData = JSON.parse(responseText);
+                    errorMessage = errorData.message || errorMessage;
+                } catch (err) {
+                    console.error('Error parsing JSON response:', err);
+                }
+                throw new Error(errorMessage);
             }
+
+            const responseData = JSON.parse(responseText);
+            console.log('Update response:', responseData);
 
             // Update profile picture if a new one is selected
             if (image) {
@@ -62,22 +76,35 @@ function Profile() {
                     body: formData,
                 });
 
+                const uploadResponseText = await uploadResponse.text();
+                console.log('Upload response text:', uploadResponseText);
+
                 if (!uploadResponse.ok) {
-                    throw new Error('Failed to upload profile picture');
+                    let uploadErrorMessage = 'Unknown error occurred';
+                    try {
+                        const uploadErrorData = JSON.parse(uploadResponseText);
+                        uploadErrorMessage = uploadErrorData.message || uploadErrorMessage;
+                    } catch (err) {
+                        console.error('Error parsing JSON response:', err);
+                    }
+                    throw new Error(uploadErrorMessage);
                 }
 
-                const data = await uploadResponse.json();
+                const uploadData = JSON.parse(uploadResponseText);
+                console.log('Upload response:', uploadData);
+
                 setUser((prevUser) => ({
                     ...prevUser,
-                    Profile_Picture: data.profilePicture,
+                    Profile_Picture: uploadData.profilePicture,
                 }));
             }
 
+            localStorage.setItem('user', JSON.stringify(user));
             alert('Profile updated successfully');
             setOriginalUser(user);
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Error updating profile');
+            alert(`Error updating profile: ${error.message}`);
         }
     };
 
