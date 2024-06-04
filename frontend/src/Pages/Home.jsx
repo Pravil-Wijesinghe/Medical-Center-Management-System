@@ -34,7 +34,7 @@ function Home() {
           <NavBar />
         </div>
       )}
-      <div className="relative w-full h-screen bg-cover bg-no-repeat" style={{ backgroundImage: `url(${bgImage1})` }}>
+      <div id='HomeSection' className="relative w-full h-screen bg-cover bg-no-repeat" style={{ backgroundImage: `url(${bgImage1})` }}>
         <div className="pl-[350px] pt-[200px] relative z-10">
           <h2 className="text-6xl font-light pb-1">Welcome to</h2>
           <h2 className="text-6xl font-semibold pb-5">Med Connect</h2>
@@ -55,10 +55,10 @@ function Home() {
             <h1>4:00 PM - 9:00 PM</h1>
           </div>
         </div>
-        <div className='relative flex justify-center items-center min-h-[700px]'>
+        <div id='AppointmentSection' className='relative flex justify-center items-center min-h-[700px]'>
           <MakeAnAppointment />
         </div>
-        <div className='relative flex flex-col justify-center items-center px-52 pt-20 text-white'>
+        <div id='AboutSection' className='relative flex flex-col justify-center items-center px-52 pt-20 text-white'>
           <h1 className='font-semibold text-3xl'>About</h1>
           <p className='font-medium text-lg mt-8 text-justify'>
             Dr. P. P. Wijesekara Medical Center, located at 162B, Darlinton Watta, Hapugala, Galle, Sri Lanka, is your trusted partner for 
@@ -67,7 +67,7 @@ function Home() {
             your journey to wellness positively.
           </p>
         </div>
-        <footer className='mt-48'>
+        <footer id='ContactUsSection' className='mt-48'>
           <div className='relative w-full h-[330px] flex flex-row bg-custom-blackGreen rounded-t-3xl px-20 pt-10 pb-10 gap-28'>
             <div className='flex flex-col items-start text-white gap-6'>
               <div>
@@ -76,18 +76,18 @@ function Home() {
                   <h1 className='font-semibold text-2xl'>Med Connect</h1>
                 </Link>
               </div>
-              <Link to={"/home"} className='flex flex-row gap-1 hover:text-custom-darkGreen'>
+              <a href='#HomeSection' className='flex flex-row gap-1 hover:text-custom-darkGreen'>
                 <ChevronDoubleRightIcon  className='h-5 text-custom-lightGreen'/>Home
-              </Link>
-              <Link to={"/home"} className='flex flex-row gap-1 hover:text-custom-darkGreen'>
+              </a>
+              <a href='#AppointmentSection' className='flex flex-row gap-1 hover:text-custom-darkGreen'>
                 <ChevronDoubleRightIcon  className='h-5 text-custom-lightGreen'/>Make an Appointment
-              </Link>
-              <Link to={"/home"} className='flex flex-row gap-1 hover:text-custom-darkGreen'>
+              </a>
+              <a href='#AboutSection' className='flex flex-row gap-1 hover:text-custom-darkGreen'>
                 <ChevronDoubleRightIcon  className='h-5 text-custom-lightGreen'/>About
-              </Link>
-              <Link to={"/home"} className='flex flex-row gap-1 hover:text-custom-darkGreen'>
+              </a>
+              <a href='#ContactUsSection' className='flex flex-row gap-1 hover:text-custom-darkGreen'>
                 <ChevronDoubleRightIcon  className='h-5 text-custom-lightGreen'/>Contact US
-              </Link>
+              </a>
             </div>
             <div className='flex flex-col items-start text-white gap-6'>
               <h1 className='font-semibold text-2xl mb-3'>Contact Us</h1>
