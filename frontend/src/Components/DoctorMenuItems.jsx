@@ -5,7 +5,7 @@ export const DoctorMenuItems = [
         cName : 'nav-links'
     },
     {
-        title : 'PatientInformation',
+        title : 'Patient Information',
         url : '/DoctorPatientInformation',
         cName : 'nav-links'
     },

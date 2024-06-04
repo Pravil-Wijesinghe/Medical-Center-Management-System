@@ -17,8 +17,8 @@ function Profile() {
             <div className='relative bg-custom-blackGreen h-24 w-full top-0 rounded-3xl flex flex-col items-center justify-center'>
                 <h2 className='text-2xl font-semibold text-white'>Profile</h2>
             </div>
-            <div className='relative flex flex-col pb-12 overflow-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent'>
-              <div className='flex flex-row items-center gap-6 p-8 ml-3'>
+            <div className='relative flex flex-col mt-8 pb-12 overflow-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent'>
+              <div className='flex flex-row items-center gap-6 ml-8 mb-4'>
                   <div className='flex items-center justify-center border-2 w-20 h-20 overflow-hidden border-black rounded-full'>
                       <input type='file'/>
                   </div>
