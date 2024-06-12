@@ -48,11 +48,26 @@ function Home() {
       <div id="bgImage2Section" className="relative w-full min-h-screen bg-cover bg-no-repeat" style={{ backgroundImage: `url(${bgImage2})` }}>
         <div className='absolute inset-0 bg-gradient-to-r from-custom-darkGreen to-custom-blackGreen opacity-80'></div>
         <div className='relative flex flex-col justify-center items-center pt-20 text-white'>
-          <h1 className='font-semibold text-3xl'>Open</h1>
-          <h3 className='text-lg font-medium'>Weekdays and Saturday</h3>
-          <div className='font-semibold text-3xl mt-4'>
-            <h1>7:00 AM - 9:00 AM</h1>
-            <h1>4:00 PM - 9:00 PM</h1>
+          <h1 className='font-semibold text-3xl mb-16'>Open</h1>
+          <div className='flex flex-row justify-center items-center gap-24 text-white'>
+            <div className='flex flex-col justify-center items-center'>
+              <h2 className='font-semibold text-2xl'>Dr. P. P. Wijesekara</h2>
+              <h3 className='text-lg font-medium'>Weekdays and Saturday</h3>
+              <h3 className='text-lg font-medium'>Room 01</h3>
+              <div className='font-semibold text-3xl mt-4'>
+                <h1>7:00 AM - 9:00 AM</h1>
+                <h1>4:00 PM - 9:00 PM</h1>
+              </div>
+            </div>
+            <div className='flex flex-col justify-center items-center'>
+              <h2 className='font-semibold text-2xl'>Dr. Sudesh Gunawardhana</h2>
+              <h3 className='text-lg font-medium'>Weekdays and Saturday</h3>
+              <h3 className='text-lg font-medium'>Room 02</h3>
+              <div className='font-semibold text-3xl mt-4'>
+                <h1>7:00 AM - 9:00 AM</h1>
+                <h1>4:00 PM - 9:00 PM</h1>
+              </div>
+            </div>
           </div>
         </div>
         <div id='AppointmentSection' className='relative flex justify-center items-center min-h-[700px]'>

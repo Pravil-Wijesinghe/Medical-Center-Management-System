@@ -10,6 +10,8 @@ module.exports = {
         'custom-darkGreen': '#0E9549',
         'custom-blackGreen': '#344837',
         'custom-red': '#C02027',
+        'custom-black': '#19241A',
+        
       },
     },
     fontFamily: {
