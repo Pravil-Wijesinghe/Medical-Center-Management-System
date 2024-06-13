@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Background from '../../Components/Background.jsx';
 import { Button } from '../../Components/Button.jsx';
 import PatientNavBar from '../../Components/PatientNavBar.jsx';
@@ -8,36 +8,39 @@ import MakeAnAppontment from '../../Components/MakeAnAppontment.jsx';
 function Appointment() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedAppointments, setSelectedAppointments] = useState([]);
-  const [appointments, setAppointments] = useState([
-    { id: 1, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
-    { id: 2, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
-    { id: 3, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
-    { id: 4, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
-    { id: 5, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
-    { id: 6, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
-    { id: 7, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
-    { id: 8, date: '01/02/2024', time: 'Morning', doctor: 'Dr. Priyantha' },
-    { id: 9, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
-    { id: 10, date: '01/02/2024', time: 'Evening', doctor: 'Dr. Priyantha' },
-    // ...add other appointments here
-  ]);
+  const [appointments, setAppointments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [makeAppointment, setMakeAppointment] = useState(false);
+
+  const fetchAppointments = async () => {
+    try {
+      const patientNIC = JSON.parse(localStorage.getItem('user')).NIC;
+      const response = await fetch(`http://localhost:3000/appointment/patient/${patientNIC}`);
+      const data = await response.json();
+      setAppointments(data);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
 
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
-      setSelectedAppointments(appointments.map(appt => appt.id));
+      setSelectedAppointments(appointments.map(appt => appt.Appointment_Number));
     } else {
       setSelectedAppointments([]);
     }
   };
 
-  const handleSelectAppointment = (id) => {
-    if (selectedAppointments.includes(id)) {
-      setSelectedAppointments(selectedAppointments.filter(apptId => apptId !== id));
+  const handleSelectAppointment = (appointmentNumber) => {
+    if (selectedAppointments.includes(appointmentNumber)) {
+      setSelectedAppointments(selectedAppointments.filter(apptNum => apptNum !== appointmentNumber));
     } else {
-      setSelectedAppointments([...selectedAppointments, id]);
+      setSelectedAppointments([...selectedAppointments, appointmentNumber]);
     }
   };
 
@@ -47,13 +50,43 @@ function Appointment() {
 
   const handleMakeAppointment = () => {
     setMakeAppointment(true);
-  }
+  };
 
-  const confirmRemove = () => {
-    setAppointments(appointments.filter(appt => !selectedAppointments.includes(appt.id)));
-    setSelectedAppointments([]);
-    setSelectAll(false);
-    setShowModal(false);
+  const confirmRemove = async () => {
+    try {
+      const appointmentsToDelete = appointments.filter(appt =>
+        selectedAppointments.includes(appt.Appointment_Number)
+      ).map(appt => ({
+        Appointment_Number: appt.Appointment_Number,
+        Date: appt.Date,
+        Doctor_NIC: appt.Doctor_NIC
+      }));
+
+      console.log('Appointments to delete:', appointmentsToDelete);
+
+      const response = await fetch('http://localhost:3000/appointment/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ appointments: appointmentsToDelete }),
+      });
+
+      if (response.ok) {
+        console.log('Appointments deleted successfully');
+        setAppointments(appointments.filter(appt =>
+          !selectedAppointments.includes(appt.Appointment_Number)
+        ));
+        setSelectedAppointments([]);
+        setSelectAll(false);
+        setShowModal(false);
+      } else {
+        const errorData = await response.json();
+        console.error('Error deleting appointments:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Error deleting appointments:', error);
+    }
   };
 
   const cancelRemove = () => {
@@ -62,6 +95,7 @@ function Appointment() {
 
   const closeMakeAppointment = () => {
     setMakeAppointment(false);
+    fetchAppointments(); // Refresh appointments list after making a new appointment
   };
 
   return (
@@ -93,12 +127,16 @@ function Appointment() {
                   {appointments.map((appointment, index) => (
                     <tr key={index} className='bg-white shadow-xl py-2 px-28 mt-5 rounded-lg'>
                       <td className='px-8 py-3 rounded-l-lg'>
-                        <input type='checkbox' checked={selectedAppointments.includes(appointment.id)} onChange={() => handleSelectAppointment(appointment.id)} />
+                        <input 
+                          type='checkbox' 
+                          checked={selectedAppointments.includes(appointment.Appointment_Number)} 
+                          onChange={() => handleSelectAppointment(appointment.Appointment_Number)} 
+                        />
                       </td>
-                      <td className='px-10 py-3'>{appointment.id}</td>
-                      <td className='px-12 py-3'>{appointment.date}</td>
-                      <td className='px-12 py-3'>{appointment.time}</td>
-                      <td className='px-12 py-3 rounded-r-lg'>{appointment.doctor}</td>
+                      <td className='px-10 py-3'>{appointment.Appointment_Number}</td>
+                      <td className='px-12 py-3'>{new Date(appointment.Date).toISOString().split('T')[0]}</td>
+                      <td className='px-12 py-3'>{appointment.Time}</td>
+                      <td className='px-12 py-3 rounded-r-lg'>{appointment.Doctor_First_Name} {appointment.Doctor_Last_Name}</td>
                     </tr>
                   ))}
                 </tbody>

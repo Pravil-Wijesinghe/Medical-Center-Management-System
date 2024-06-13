@@ -1,6 +1,4 @@
-const validator = require('validator');
-
-// Validate NIC number and password
+// backend/Validations/validateLogin.js
 const validateLoginData = (data) => {
     const { nic, password } = data;
 
@@ -12,7 +10,7 @@ const validateLoginData = (data) => {
         return { valid: false, message: 'Password is required.' };
     }
 
-    return { valid: true };
+    return { valid: true, message: '' };
 };
 
 module.exports = validateLoginData;

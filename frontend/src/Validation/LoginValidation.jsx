@@ -1,5 +1,4 @@
 // frontend/src/Validation/LoginValidation.js
-
 const validateLogin = (values) => {
     let errors = {};
 

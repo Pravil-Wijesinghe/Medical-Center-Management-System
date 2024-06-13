@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from '../Images/Logo.png';
 import { Link } from 'react-router-dom';
 import { ReceptionistMenuItems } from './ReceptionistMenuItems';
 
 function ReceptionistNavBar() {
   const [dropdown, setDropdown] = useState(null);
+  const [receptionist, setReceptionist] = useState({});
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+      setReceptionist(userData);
+    }
+  }, []);
 
   return (
     <div className='flex pt-2.5 justify-center'>
@@ -37,7 +45,7 @@ function ReceptionistNavBar() {
         </ul>
         <div>
           <Link className='flex items-center space-x-4' to='/ReceptionistProfile'>
-            <p className='-mr-2 text-white'>User's Name</p>
+            <p className='-mr-2 text-white'>{receptionist.First_Name} {receptionist.Last_Name}</p>
             <div className='relative bg-gray-400 rounded-full w-10 h-10'></div>
           </Link>
         </div>

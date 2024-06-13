@@ -1,28 +1,38 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const bodyParser = require('body-parser');
-const signupRoute = require('./routes/signup');
-const loginRoute = require('./routes/login');
-const appointmentRoutes = require('./routes/appointment');
-const dbConnect = require('./DBConnect');
 
+const appointmentRoutes = require('./routes/appointment');
+const loginRoutes = require('./routes/login');
+const signupRoutes = require('./routes/signup');
+const patientRoutes = require('./routes/patient');
+const doctorRoutes = require('./routes/doctor');
+const familyMemberRoutes = require('./routes/familyMember');
+const receptionistRoutes = require('./routes/receptionist');
+const dashboardRoutes = require('./routes/dashboard');
+const availabilityRoutes = require('./routes/availability');
+const doctorAvailabilityRoutes = require('./routes/doctorAvailability');
+const medicineRoutes = require('./routes/medicine');
+const addDoctorRoute = require('./routes/addDoctor');
+
+app.use(cors());
 app.use(bodyParser.json());
 
-// Add CORS headers
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    next();
-});
-
-app.use('/signup', signupRoute);
-app.use('/login', loginRoute);
-// Use appointment routes
 app.use('/appointment', appointmentRoutes);
+app.use('/login', loginRoutes);
+app.use('/signup', signupRoutes);
+app.use('/patient', patientRoutes);
+app.use('/doctor', doctorRoutes);
+app.use('/familyMember', familyMemberRoutes);
+app.use('/receptionist', receptionistRoutes);
+app.use('/dashboard', dashboardRoutes);
+app.use('/availability', availabilityRoutes);
+app.use('/doctorAvailability', doctorAvailabilityRoutes);
+app.use('/medicine', medicineRoutes);
+app.use('/addDoctor', addDoctorRoute);
 
-const PORT = process.env.PORT || 3000;
-
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

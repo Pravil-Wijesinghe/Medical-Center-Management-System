@@ -1,19 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReceptionistNavBar from '../../Components/ReceptionistNavBar';
 import Background from '../../Components/Background';
 import { Button } from '../../Components/Button';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Profile() {
+  const [receptionist, setReceptionist] = useState({});
+  const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+      setReceptionist(userData);
+      setFormData(userData);
+    }
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await axios.put('http://localhost:3000/receptionist/update', {
+        nic: formData.NIC,
+        firstName: formData.First_Name,
+        lastName: formData.Last_Name,
+        address: formData.Address,
+        email: formData.Email,
+        contactNumber: formData.Contact_Number,
+      });
+      if (response.status === 200) {
+        // Update the local storage with the new data
+        localStorage.setItem('user', JSON.stringify(formData));
+        alert('Profile updated successfully');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('An error occurred while updating the profile. Please try again.');
+    }
+  };
+
+  const handleCancel = () => {
+    navigate('/ReceptionistDashboard');
+  };
+
   return (
     <div className='relative text-white font-montserrat'>
         <Background/>
         <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full'>
-            <ReceptionistNavBar/>
+            <ReceptionistNavBar />
         </div>
         <div className='flex items-center justify-center'>
-        <div className='absolute top-[90px] bg-white text-black flex flex-col w-[68%] h-[80%] rounded-3xl mt-4'>
+          <div className='absolute top-[90px] bg-white text-black flex flex-col w-[68%] h-[80%] rounded-3xl mt-4'>
             <div className='relative bg-custom-blackGreen h-24 w-full top-0 rounded-3xl flex flex-col items-center justify-center'>
-                <h2 className='text-2xl font-semibold text-white'>Profile</h2>
+              <h2 className='text-2xl font-semibold text-white'>Profile</h2>
             </div>
             <div className='relative flex flex-col mt-8 pb-12 overflow-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent'>
               <div className='flex flex-row items-center gap-6 ml-8 mb-4'>
@@ -21,46 +68,82 @@ function Profile() {
                       <input type='file'/>
                   </div>
                   <div className='font-medium text-lg'>
-                      Reseptionist's Name
+                      {receptionist.First_Name} {receptionist.Last_Name}
                   </div>
               </div>
               <div className='flex flex-col gap-3'>
                 <div className='flex flex-row items-center w-full px-8 gap-4'>
                     <div className='w-1/2'>
                         <h2 className='text-base font-semibold mb-0.5 ml-2'>First Name</h2>
-                        <input type='text' className='rounded-md border-2 h-9 w-full p-2 outline-none' name='First_Name' />
+                        <input 
+                          type='text' 
+                          className='rounded-md border-2 h-9 w-full p-2 outline-none' 
+                          name='First_Name' 
+                          value={formData.First_Name || ''} 
+                          onChange={handleInputChange} 
+                        />
                     </div>
                     <div className='w-1/2'>
                         <h2 className='text-base font-semibold mb-0.5 ml-2'>Address</h2>
-                        <input type='text' className='rounded-md border-2 h-9 w-full p-2 outline-none' name='Address' />
+                        <input 
+                          type='text' 
+                          className='rounded-md border-2 h-9 w-full p-2 outline-none' 
+                          name='Address' 
+                          value={formData.Address || ''} 
+                          onChange={handleInputChange} 
+                        />
                     </div>
                 </div>
                 <div className='flex flex-row items-center w-full px-8 gap-4'>
                     <div className='w-1/2'>
                         <h2 className='text-base font-semibold mb-0.5 ml-2'>Last Name</h2>
-                        <input type='text' className='rounded-md border-2 h-9 w-full p-2 outline-none' name='Last_Name' />
+                        <input 
+                          type='text' 
+                          className='rounded-md border-2 h-9 w-full p-2 outline-none' 
+                          name='Last_Name' 
+                          value={formData.Last_Name || ''} 
+                          onChange={handleInputChange} 
+                        />
                     </div>
                     <div className='w-1/2'>
                         <h2 className='text-base font-semibold mb-0.5 ml-2'>Email</h2>
-                        <input type='text' className='rounded-md border-2 h-9 w-full p-2 outline-none' name='Email' />
+                        <input 
+                          type='text' 
+                          className='rounded-md border-2 h-9 w-full p-2 outline-none' 
+                          name='Email' 
+                          value={formData.Email || ''} 
+                          onChange={handleInputChange} 
+                        />
                     </div>
                 </div>
                 <div className='flex flex-row items-center w-full px-8 gap-4'>
                     <div className='w-1/2'>
                         <h2 className='text-base font-semibold mb-0.5 ml-2'>NIC Number</h2>
-                        <input type='text' className='rounded-md border-2 h-9 w-full p-2 outline-none' name='NIC_Number' />
+                        <input 
+                          type='text' 
+                          className='rounded-md border-2 h-9 w-full p-2 outline-none' 
+                          name='NIC' 
+                          value={formData.NIC || ''} 
+                          readOnly 
+                        />
                     </div>
                     <div className='w-1/2'>
                         <h2 className='text-base font-semibold mb-0.5 ml-2'>Mobile Number</h2>
-                        <input type='text' className='rounded-md border-2 h-9 w-full p-2 outline-none' name='Mobile_Number' />
+                        <input 
+                          type='text' 
+                          className='rounded-md border-2 h-9 w-full p-2 outline-none' 
+                          name='Contact_Number' 
+                          value={formData.Contact_Number || ''} 
+                          onChange={handleInputChange} 
+                        />
                     </div>
                 </div>
                 <div className='flex flex-row items-center w-full px-8 gap-4 mt-8'>
                     <div className='w-1/2'>
-                        <Button className="outline outline-2 outline-offset-0 outline-custom-darkGreen hover:outline-custom-red text-black text-base font-medium px-4 py-2 rounded-md w-full">Cancel</Button>
+                        <Button className="outline outline-2 outline-offset-0 outline-custom-darkGreen hover:outline-custom-red text-black text-base font-medium px-4 py-2 rounded-md w-full" onClick={handleCancel}>Cancel</Button>
                     </div>
                     <div className='w-1/2'>
-                        <Button className="bg-custom-darkGreen text-white text-base font-medium px-4 py-2 rounded-md w-full hover:bg-custom-blackGreen">Save</Button>
+                        <Button className="bg-custom-darkGreen text-white text-base font-medium px-4 py-2 rounded-md w-full hover:bg-custom-blackGreen" onClick={handleSave}>Save</Button>
                     </div>
                 </div>
               </div>
@@ -68,7 +151,7 @@ function Profile() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Profile
+export default Profile;

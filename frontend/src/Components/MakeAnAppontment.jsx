@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+// frontend/src/Components/MakeAnAppointment.jsx
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { generateDate, months } from './calender';
 import cn from './cn';
 import { ArrowLeftIcon, ArrowRightIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Button } from './Button';
+import axios from 'axios';
 
 function MakeAnAppointment({ closeMakeAppointment }) {
   const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -16,6 +18,19 @@ function MakeAnAppointment({ closeMakeAppointment }) {
   const [diseaseReport, setDiseaseReport] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [relationship, setRelationship] = useState('');
+  const [doctors, setDoctors] = useState([]); // Initialize as an empty array
+
+  useEffect(() => {
+    // Fetch doctors from the server
+    axios.get('http://localhost:3000/doctors')
+      .then(response => {
+        console.log('Fetched doctors:', response.data); // Debugging line
+        setDoctors(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the doctors!', error);
+      });
+  }, []);
 
   const handleCancel = () => {
     setShowConfirm(true);
@@ -174,8 +189,15 @@ function MakeAnAppointment({ closeMakeAppointment }) {
                   onChange={(e) => setSelectedDoctor(e.target.value)}
                 >
                   <option value=''>Select a doctor</option>
-                  <option value='Dr. P. P. Wijesekara'>Dr. P. P. Wijesekara</option>
-                  <option value='Dr. Sudesh Gunawardhana'>Dr. Sudesh Gunawardhana</option>
+                  {doctors.length > 0 ? (
+                    doctors.map((doctor) => (
+                      <option key={doctor.NIC} value={doctor.NIC}>
+                        {doctor.First_Name} {doctor.Last_Name}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>Loading doctors...</option>
+                  )}
                 </select>
               </div>
               <div>
@@ -278,7 +300,7 @@ function MakeAnAppointment({ closeMakeAppointment }) {
                 className='w-24 outline outline-2 outline-offset-0 outline-red-600 bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-md'
                 onClick={confirmRemove}
               >
-                yes
+                Yes
               </Button>
             </div>
           </div>

@@ -21,7 +21,8 @@ import AppointmentPNG from '../../Images/appointment.png';
 import { Button } from '../../Components/Button';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import DayRangePicker from '../../Components/DayRangePicker';
-import {TimePickerComponent} from '@syncfusion/ej2-react-calendars';
+import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
+import axios from 'axios';
 
 // Register the necessary components
 ChartJS.register(
@@ -41,19 +42,75 @@ function Dashboard() {
   const chartRef1 = useRef(null);
   const chartRef2 = useRef(null);
 
-  const [doctors] = useState([
-    { name: 'P. P. Wijesekara', room: 'Room 01', availableDays: 'Sun - Fri', availableTime: '7.00 A.M. - 9.00 A.M.', status: 'available' },
-    { name: 'Sudesh Gunawardhana', room: 'Room 02', availableDays: 'Sun - Fri', availableTime: '4.00 P.M. - 9.00 P.M.', status: 'Unavailable' },
-  ]);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [counts, setCounts] = useState({
+    totalPatients: 0,
+    totalDoctors: 0,
+    totalMedicines: 0,
+    totalAppointments: 0
+  });
 
-  const openPopup = (doctor) => {
-    setSelectedDoctor(doctor);
+  const [appointments, setAppointments] = useState({
+    Morning: 0,
+    Evening: 0
+  });
+
+  const [doctors, setDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [selectedDoctorAvailability, setSelectedDoctorAvailability] = useState([]);
+  const [selectedDoctorRoom, setSelectedDoctorRoom] = useState("");
+  const [selectedDoctorStatus, setSelectedDoctorStatus] = useState("");
+
+  const openPopup = async (doctor) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/doctorAvailability/${doctor.NIC}`);
+      setSelectedDoctor(response.data.doctor);
+      setSelectedDoctorAvailability(response.data.availability);
+      setSelectedDoctorRoom(response.data.doctor.Room);
+      setSelectedDoctorStatus(response.data.doctor.Status);
+    } catch (error) {
+      console.error('Error fetching doctor details:', error);
+    }
   };
 
   const closePopup = () => {
     setSelectedDoctor(null);
+    setSelectedDoctorAvailability([]);
+    setSelectedDoctorRoom("");
+    setSelectedDoctorStatus("");
   };
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/dashboard/counts');
+        setCounts(response.data);
+      } catch (error) {
+        console.error('Error fetching counts:', error);
+      }
+    };
+
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/dashboard/today-appointments');
+        setAppointments(response.data);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+
+    const fetchDoctors = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/doctors');
+        setDoctors(response.data);
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+      }
+    };
+
+    fetchCounts();
+    fetchAppointments();
+    fetchDoctors();
+  }, []);
 
   useEffect(() => {
     const ctx1 = document.getElementById('myChart').getContext('2d');
@@ -73,7 +130,7 @@ function Dashboard() {
         datasets: [
           {
             label: 'Appointments',
-            data: [12, 20],
+            data: [appointments.Morning, appointments.Evening],
             backgroundColor: [
               'rgba(14, 149, 73, 0.9)',
               'rgba(14, 149, 73, 0.9)',
@@ -179,7 +236,31 @@ function Dashboard() {
         chartRef2.current.destroy();
       }
     };
-  }, []);
+  }, [appointments]);
+
+  const handleSave = async () => {
+    const updatedAvailability = selectedDoctorAvailability[0];
+    updatedAvailability.Room = selectedDoctorRoom;
+    updatedAvailability.Status = selectedDoctorStatus;
+
+    try {
+      const response = await axios.put(`http://localhost:3000/doctorAvailability/${updatedAvailability.id}`, updatedAvailability);
+      console.log(response.data.message);
+      closePopup();
+    } catch (error) {
+      console.error('Error saving availability:', error);
+    }
+  };
+
+  const handleDelete = async (availabilityId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/doctorAvailability/${availabilityId}`);
+      console.log(response.data.message);
+      closePopup();
+    } catch (error) {
+      console.error('Error deleting availability:', error);
+    }
+  };
 
   return (
     <div className='text-white font-montserrat'>
@@ -196,34 +277,34 @@ function Dashboard() {
                     <img src={PatientPNG} className='h-10' alt='Patient Icon' />
                     <div className='flex flex-col justify-center'>
                     <h3 className='text-lg'>Patients</h3>
-                    <h2 className='text-2xl font-bold text-custom-lightGreen'>100</h2>
+                    <h2 className='text-2xl font-bold text-custom-lightGreen'>{counts.totalPatients}</h2>
                     </div>
                 </div>
                 <div className='flex bg-custom-black rounded-xl w-fit h-fit px-4 py-1 gap-3 items-center'>
-                    <img src={DoctorPNG} className='h-10' alt='Patient Icon' />
+                    <img src={DoctorPNG} className='h-10' alt='Doctor Icon' />
                     <div className='flex flex-col justify-center'>
                     <h3 className='text-lg'>Doctors</h3>
-                    <h2 className='text-2xl font-bold text-custom-lightGreen'>02</h2>
+                    <h2 className='text-2xl font-bold text-custom-lightGreen'>{counts.totalDoctors}</h2>
                     </div>
                 </div>
                 <div className='flex bg-custom-black rounded-xl w-fit h-fit px-4 py-1 gap-3 items-center'>
-                    <img src={MedicinePNG} className='h-10' alt='Patient Icon' />
+                    <img src={MedicinePNG} className='h-10' alt='Medicine Icon' />
                     <div className='flex flex-col justify-center'>
                     <h3 className='text-lg'>Medicines</h3>
-                    <h2 className='text-2xl font-bold text-custom-lightGreen'>36</h2>
+                    <h2 className='text-2xl font-bold text-custom-lightGreen'>{counts.totalMedicines}</h2>
                     </div>
                 </div>
                 <div className='flex bg-custom-black rounded-xl w-fit h-fit px-4 py-1 gap-3 items-center'>
-                    <img src={AppointmentPNG} className='h-10' alt='Patient Icon' />
+                    <img src={AppointmentPNG} className='h-10' alt='Appointment Icon' />
                     <div className='flex flex-col justify-center'>
                     <h3 className='text-lg'>Appointments</h3>
-                    <h2 className='text-2xl font-bold text-custom-lightGreen'>64</h2>
+                    <h2 className='text-2xl font-bold text-custom-lightGreen'>{counts.totalAppointments}</h2>
                     </div>
                 </div>
             </div>
             <div className='flex flex-row px-20 gap-4'>
                 <div className='flex flex-col w-1/2 h-fit gap-4'>
-                    <h3 className='text-xl font-medium ml-5'>Appointments</h3>
+                    <h3 className='text-xl font-medium ml-5'>Today's Appointments</h3>
                     <div className='flex bg-custom-black w-full rounded-3xl p-8'>
                     <canvas id='myChart'></canvas>
                     </div>
@@ -252,11 +333,11 @@ function Dashboard() {
                         <tbody>
                           {doctors.map((doctor, index) => (
                             <tr key={index} className='text-sm '>
-                              <td>{doctor.name}</td>
-                              <td>{doctor.room}</td>
-                              <td>{doctor.availableDays}</td>
-                              <td>{doctor.availableTime}</td>
-                              <td>{doctor.status}</td>
+                              <td>{doctor.First_Name} {doctor.Last_Name}</td>
+                              <td>{doctor.Room}</td>
+                              <td>{doctor.AvailableDays}</td>
+                              <td>{doctor.AvailableTime}</td>
+                              <td>{doctor.Status}</td>
                               <td>
                                 <Button className='text-white bg-custom-darkGreen text-sm font-medium px-4 py-[4px] rounded-md w-fit'
                                         onClick={() => openPopup(doctor)}>
@@ -269,12 +350,6 @@ function Dashboard() {
                       </table>
                     </div>
                 </div>
-                <div className='flex flex-col w-[30%] h-fit gap-4'>
-                    <h3 className='text-xl font-medium ml-5'>Top Sales Medicines</h3>
-                    <div className='flex bg-custom-black w-full rounded-3xl p-8'>
-                    <canvas id='myChart2'></canvas>
-                    </div>
-                </div>
             </div>
         </div>
         {selectedDoctor && (
@@ -283,51 +358,52 @@ function Dashboard() {
             <div className='flex items-center justify-center'>
                 <div className='absolute bg-custom-black text-black flex flex-col w-[68%] h-[80%] rounded-3xl mt-4'>
                     <div className='relative flex flex-col items-center text-white pt-5 pb-12 overflow-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-custom-blackGreen scrollbar-track-transparent'>
-                        <h2 className='text-2xl p-6 font-semibold'>{selectedDoctor.name}</h2>
+                        <h2 className='text-2xl p-6 font-semibold'>{selectedDoctor.First_Name} {selectedDoctor.Last_Name}</h2>
                         <div className='flex flex-row items-center gap-2 w-[60%] px-8 mt-4'>
                             <h3 className='text-lg font-medium w-[35%]'>Request</h3>
-                            <textarea className='bg-custom-black border-2 border-custom-darkGreen rounded-md p-2 w-[65%]'>
+                            <textarea className='bg-custom-black border-2 border-custom-darkGreen rounded-md p-2 w-[65%]' readOnly>
+                              {selectedDoctorAvailability.length > 0 && selectedDoctorAvailability[0].note}
                             </textarea>
                         </div>
                         <div className='flex flex-row items-center gap-2 w-[60%] px-8 mt-4'>
                             <h3 className='text-lg font-medium w-[35%]'>Room</h3>
-                            <select className='bg-custom-black border-2 border-custom-darkGreen rounded-md p-2 w-[65%]'>
-                              <option>Room 01</option>
-                              <option>Room 02</option>
+                            <select className='bg-custom-black border-2 border-custom-darkGreen rounded-md p-2 w-[65%]' value={selectedDoctorRoom} onChange={(e) => setSelectedDoctorRoom(e.target.value)}>
+                              <option value="Room 01">Room 01</option>
+                              <option value="Room 02">Room 02</option>
                             </select>
                         </div>
                         <div className='flex flex-row items-center gap-2 w-[60%] px-8 mt-4'>
                             <h3 className='text-lg font-medium w-[35%]'>Available Days</h3>
-                            <DayRangePicker/>
+                            <DayRangePicker value={selectedDoctorAvailability.map(avail => avail.date)} />
                         </div>
                         <div className='flex flex-row items-center gap-2 w-[60%] px-8 mt-4'>
                             <h3 className='text-lg font-medium w-[35%]'>Available Time</h3>
                             <div className='flex items-center gap-4 w-[65%]'>
                               <div className='w-1/2 text-white bg-custom-black border-2 border-custom-darkGreen rounded-md'>
-                                <TimePickerComponent className="react-time-picker" clockClassName="react-time-picker__clock" placeholder='Select a time'></TimePickerComponent>
+                                <TimePickerComponent className="react-time-picker" clockClassName="react-time-picker__clock" placeholder='Select a time' value={selectedDoctorAvailability.length > 0 ? selectedDoctorAvailability[0].start_time : null}></TimePickerComponent>
                               </div>
                               <p>-</p>
                               <div className='w-1/2 text-white bg-custom-black border-2 border-custom-darkGreen rounded-md'>
-                                <TimePickerComponent placeholder='Select a time'></TimePickerComponent>
+                                <TimePickerComponent placeholder='Select a time' value={selectedDoctorAvailability.length > 0 ? selectedDoctorAvailability[0].close_time : null}></TimePickerComponent>
                               </div>
                             </div>
                         </div>
                         <div className='flex flex-row items-center gap-2 w-[60%] px-8 mt-4'>
                             <h3 className='text-lg font-medium w-[35%]'>Status</h3>
-                            <select className='bg-custom-black border-2 border-custom-darkGreen rounded-md p-2 w-[65%]'>
-                              <option>Available</option>
-                              <option>Unavailable</option>
+                            <select className='bg-custom-black border-2 border-custom-darkGreen rounded-md p-2 w-[65%]' value={selectedDoctorStatus} onChange={(e) => setSelectedDoctorStatus(e.target.value)}>
+                              <option value="Available">Available</option>
+                              <option value="Unavailable">Unavailable</option>
                             </select>
                         </div>
                         <div className='flex flex-row items-center w-[60%] px-8 gap-4 mt-10'>
                             <div className='w-1/3'>
-                                <Button className="bg-custom-red hover:opacity-80 text-white text-base font-medium px-4 py-2 rounded-md w-full">Delete</Button>
+                                <Button className="bg-custom-red hover:opacity-80 text-white text-base font-medium px-4 py-2 rounded-md w-full" onClick={() => handleDelete(selectedDoctorAvailability[0].id)}>Delete</Button>
                             </div>
                             <div className='w-1/3'>
                                 <Button onClick={closePopup} className="outline outline-2 outline-offset-0 outline-custom-darkGreen text-white text-base font-medium px-4 py-2 rounded-md w-full hover:outline-custom-red">Cancel</Button>
                             </div>
                             <div className='w-1/3'>
-                                <Button className="bg-custom-darkGreen text-white text-base font-medium px-4 py-2 rounded-md w-full hover:bg-custom-blackGreen">Save</Button>
+                                <Button className="bg-custom-darkGreen text-white text-base font-medium px-4 py-2 rounded-md w-full hover:bg-custom-blackGreen" onClick={handleSave}>Save</Button>
                             </div>
                         </div>
                     </div>

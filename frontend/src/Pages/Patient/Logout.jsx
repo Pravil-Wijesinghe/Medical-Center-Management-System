@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Background from '../../Components/Background';
 import PatientNavBar from '../../Components/PatientNavBar';
-import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Button } from '../../Components/Button';
 
 function Logout() {
@@ -10,6 +10,14 @@ function Logout() {
 
   const handleCancel = () => {
     navigate('/PatientProfile');
+  };
+
+  const handleLogout = () => {
+    // Clear user data from localStorage
+    localStorage.removeItem('user');
+
+    // Redirect to home page
+    navigate('/home');
   };
 
   return (
@@ -25,7 +33,7 @@ function Logout() {
             </div>
             <div className='relative flex flex-col items-center mt-[60px] pb-12 overflow-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent'>
                 <div className='flex flex-col items-center justify-center gap-4'>
-                    <ArrowRightStartOnRectangleIcon className='w-16 h-16'/>
+                    <ArrowRightOnRectangleIcon className='w-16 h-16'/>
                     <p>Are you sure, you want to log out?</p>
                 </div>
                 <div className='flex flex-row items-center justify-center px-60 w-full gap-4 mt-8'>
@@ -33,7 +41,7 @@ function Logout() {
                     <Button className="outline outline-2 outline-offset-0 outline-custom-darkGreen hover:outline-custom-red text-black text-base font-medium px-4 py-2 rounded-md w-full" onClick={handleCancel}>Cancel</Button>
                   </div>
                   <div className='w-1/2'>
-                    <Button className="bg-custom-darkGreen text-white text-base font-medium px-4 py-2 rounded-md w-full hover:bg-custom-blackGreen">Logout</Button>
+                    <Button className="bg-custom-darkGreen text-white text-base font-medium px-4 py-2 rounded-md w-full hover:bg-custom-blackGreen" onClick={handleLogout}>Logout</Button>
                   </div>
                 </div>
             </div>
