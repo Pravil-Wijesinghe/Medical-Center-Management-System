@@ -20,6 +20,9 @@ import ReceptionistAddMedicine from './Pages/Receptionist/AddMedicine';
 import ReceptionistViewMedicines from './Pages/Receptionist/ViewMedicines';
 import ReceptionistMakeAppointment from './Pages/Receptionist/MakeAnAppointment';
 import ReceptionistViewAppointments from './Pages/Receptionist/ViewAppointments';
+import DoctorLogout from './Pages/Doctor/Logout';
+import ReceptionistLogout from './Pages/Receptionist/Logout';
+import ReceptionistDoctorPayments from './Pages/Receptionist/Payment';
 
 function App() {
   return (
@@ -48,6 +51,9 @@ function App() {
           <Route path='/ReceptionistViewMedicines' element={<ReceptionistViewMedicines/>}></Route>
           <Route path='/ReceptionistMakeAppointment' element={<ReceptionistMakeAppointment/>}></Route>
           <Route path='/ReceptionistViewAppointments' element={<ReceptionistViewAppointments/>}></Route>
+          <Route path='/DoctorLogout' element={<DoctorLogout/>}></Route>
+          <Route path='/ReceptionistLogout' element={<ReceptionistLogout/>}></Route>
+          <Route path='/ReceptionistDoctorPayments' element={<ReceptionistDoctorPayments/>}></Route>
         </Routes>
       </BrowserRouter>
       

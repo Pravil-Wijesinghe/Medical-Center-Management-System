@@ -16,6 +16,13 @@ const doctorAvailabilityRoutes = require('./routes/doctorAvailability');
 const medicineRoutes = require('./routes/medicine');
 const addDoctorRoute = require('./routes/addDoctor');
 
+const getDoctorsRoute = require('./routes/getDoctors');
+const updateDoctorRoute = require('./routes/updateDoctor');
+const deleteDoctorRoute = require('./routes/deleteDoctor');
+const addPaymentRoute = require('./routes/addPayment');
+
+const paymentRoute = require('./routes/payment');
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -31,6 +38,13 @@ app.use('/availability', availabilityRoutes);
 app.use('/doctorAvailability', doctorAvailabilityRoutes);
 app.use('/medicine', medicineRoutes);
 app.use('/addDoctor', addDoctorRoute);
+
+app.use('/getDoctors', getDoctorsRoute);
+app.use('/updateDoctor', updateDoctorRoute);
+app.use('/deleteDoctor', deleteDoctorRoute);
+app.use('/addPayment', addPaymentRoute);
+
+app.use('/api', paymentRoute);
 
 const PORT = 3000;
 app.listen(PORT, () => {

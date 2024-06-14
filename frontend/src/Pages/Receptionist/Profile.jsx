@@ -54,7 +54,7 @@ function Profile() {
   return (
     <div className='relative text-white font-montserrat'>
         <Background/>
-        <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full'>
+        <div className='fixed -mt-[300px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full'>
             <ReceptionistNavBar />
         </div>
         <div className='flex items-center justify-center'>

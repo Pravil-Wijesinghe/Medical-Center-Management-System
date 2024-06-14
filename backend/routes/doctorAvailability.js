@@ -4,21 +4,24 @@ const router = express.Router();
 const connection = require('../DBConnect');
 
 // Fetch doctor details and their availability
-router.get('/:nic', (req, res) => {
-    const { nic } = req.params;
-    
+router.get('/:doctorNIC', (req, res) => {
+    const doctorNIC = req.params.doctorNIC;
+
     const doctorQuery = 'SELECT * FROM doctor WHERE NIC = ?';
     const availabilityQuery = 'SELECT * FROM doctor_availability WHERE Doctor_NIC = ?';
 
-    connection.query(doctorQuery, [nic], (err, doctorResults) => {
+    connection.query(doctorQuery, [doctorNIC], (err, doctorResults) => {
         if (err) {
-            console.error('Error fetching doctor details:', err);
+            console.error('Error fetching doctor:', err);
             return res.status(500).json({ message: 'Database error', error: err });
         }
+        if (doctorResults.length === 0) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
 
-        connection.query(availabilityQuery, [nic], (err, availabilityResults) => {
+        connection.query(availabilityQuery, [doctorNIC], (err, availabilityResults) => {
             if (err) {
-                console.error('Error fetching doctor availability:', err);
+                console.error('Error fetching availability:', err);
                 return res.status(500).json({ message: 'Database error', error: err });
             }
 

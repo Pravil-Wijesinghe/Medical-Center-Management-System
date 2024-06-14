@@ -15,11 +15,6 @@ export const PatientMenuItems = [
         cName : 'nav-links'
     },
     {
-        title : 'Reset Password',
-        url : '/PatientResetPassword',
-        cName : 'nav-links'
-    },
-    {
         title : 'Logout',
         url : '/PatientLogout',
         cName : 'nav-links'

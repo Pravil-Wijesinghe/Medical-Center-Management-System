@@ -19,7 +19,8 @@ export const ReceptionistMenuItems = [
         cName: 'nav-links',
         subMenu: [
             { title: 'Add a Doctor', url: '/ReceptionistAddDoctor' },
-            { title: 'View Doctors', url: '/ReceptionistViewDoctors' }
+            { title: 'View Doctors', url: '/ReceptionistViewDoctors' },
+            { title: 'Payments', url: '/ReceptionistDoctorPayments' }
         ]
     },
     {
@@ -41,8 +42,8 @@ export const ReceptionistMenuItems = [
         ]
     },
     {
-        title: 'Staff',
-        url: '/ReceptionistStaff',
+        title: 'Logout',
+        url: '/ReceptionistLogout',
         cName: 'nav-links'
     }
 ]
