@@ -15,6 +15,7 @@ const formatDate = (date) => {
     return [year, month, day].join('-');
 };
 
+// Handler to get all medicines from the database
 const getAllMedicines = (req, res) => {
     const query = 'SELECT * FROM medicine';
     connection.query(query, (err, results) => {
@@ -32,6 +33,7 @@ const getAllMedicines = (req, res) => {
     });
 };
 
+// Handler to get a single medicine by its ID
 const getMedicineById = (req, res) => {
     const { id } = req.params;
     const query = 'SELECT * FROM medicine WHERE Medicine_ID = ?';
@@ -52,6 +54,7 @@ const getMedicineById = (req, res) => {
     });
 };
 
+// Handler to update an existing medicine's details
 const updateMedicine = (req, res) => {
     const { id } = req.params;
     const { name, description, supplying_price, selling_price, exp_date, mgf_date, quantity } = req.body;
@@ -70,6 +73,7 @@ const updateMedicine = (req, res) => {
     });
 };
 
+// Handler to add a new medicine to the database
 const addMedicine = (req, res) => {
     const { name, description, supplying_price, selling_price, exp_date, mgf_date, quantity } = req.body;
 

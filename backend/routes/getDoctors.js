@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../DBConnect');
 
+// Route to fetch all doctors
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM doctor';
 

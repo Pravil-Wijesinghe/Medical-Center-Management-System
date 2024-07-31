@@ -4,8 +4,10 @@ import DoctorNavBar from '../../Components/DoctorNavBar';
 import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { Button } from '../../Components/Button';
 
+// Days of the week array
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+// Initial state for form data
 function Availability() {
   const initialFormData = {
     availability: 'Available',
@@ -14,10 +16,12 @@ function Availability() {
     note: ''
   };
 
+  // State hooks for form data, selected days, and message
   const [formData, setFormData] = useState(initialFormData);
   const [selectedDays, setSelectedDays] = useState([]);
   const [message, setMessage] = useState('');
 
+  // Handle input change for form fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -26,6 +30,7 @@ function Availability() {
     });
   };
 
+  // Toggle day selection
   const handleDaySelection = (day) => {
     setSelectedDays((prevSelectedDays) =>
       prevSelectedDays.includes(day)
@@ -34,6 +39,7 @@ function Availability() {
     );
   };
 
+  // Handle time change and format it
   const handleTimeChange = (name, value) => {
     const formattedTime = new Date(value).toLocaleTimeString('en-US', { hour12: false });
     setFormData({
@@ -42,6 +48,7 @@ function Availability() {
     });
   };
 
+  // Handle form submission
   const handleSubmit = async () => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser && storedUser.NIC) {
@@ -76,6 +83,7 @@ function Availability() {
     }
   };
 
+  // Handle form Cancel
   const handleCancel = () => {
     setFormData(initialFormData);
     setSelectedDays([]);

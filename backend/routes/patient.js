@@ -7,6 +7,8 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const validatePatientData = require('../Validations/validatePatient');
 
+
+
 // Set up multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

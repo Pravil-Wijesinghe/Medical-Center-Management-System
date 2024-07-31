@@ -4,6 +4,7 @@ import ReceptionistNavBar from '../../Components/ReceptionistNavBar';
 import { Button } from '../../Components/Button';
 
 function AddAPatient() {
+    // Initial state for the form data
   const initialState = {
     NIC: '',
     First_Name: '',
@@ -19,9 +20,11 @@ function AddAPatient() {
     Blood_Group: '',
   };
 
+  // State hooks to manage form data and success message
   const [formData, setFormData] = useState(initialState);
   const [successMessage, setSuccessMessage] = useState('');
 
+  // Function to handle input changes in the form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -30,9 +33,11 @@ function AddAPatient() {
     });
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+        // Send a POST request to add a patient
       const response = await axios.post('http://localhost:3000/patient/add', formData);
       if (response.status === 200) {
         setSuccessMessage('Patient added successfully');
@@ -44,6 +49,7 @@ function AddAPatient() {
     }
   };
 
+  // Function to handle cancel button click
   const handleCancel = () => {
     setFormData(initialState);
   };

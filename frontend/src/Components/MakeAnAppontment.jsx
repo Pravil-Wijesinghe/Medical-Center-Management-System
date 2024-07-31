@@ -22,14 +22,15 @@ function MakeAnAppointment({ closeMakeAppointment }) {
 
   useEffect(() => {
     axios.get('http://localhost:3000/doctors')
-      .then(response => {
-        console.log('Fetched doctors:', response.data); // Debugging line
-        setDoctors(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the doctors!', error);
-      });
-  }, []);
+        .then(response => {
+            console.log('Fetched doctors:', response.data);
+            setDoctors(response.data);
+        })
+        .catch(error => {
+            console.error('There was an error fetching the doctors!', error);
+        });
+}, []);
+  
 
   const handleCancel = () => {
     setShowConfirm(true);

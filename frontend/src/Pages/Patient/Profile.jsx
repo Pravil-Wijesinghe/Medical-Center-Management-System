@@ -5,12 +5,17 @@ import AddUserIcon from '../../Images/user.png';
 import { Button } from '../../Components/Button.jsx';
 
 function Profile() {
+    //file input element
     const inputref = useRef(null);
+    // State for storing the selected image
     const [image, setImage] = useState(null);
+    // State for storing user data
     const [user, setUser] = useState({});
+    // State for storing original user data
     const [originalUser, setOriginalUser] = useState({});
 
     useEffect(() => {
+        // Fetch user data from localStorage on component mount
         const storedUser = JSON.parse(localStorage.getItem('user'));
         if (storedUser) {
             setUser(storedUser);
@@ -18,6 +23,7 @@ function Profile() {
         }
     }, []);
 
+    // Function to handle input field changes
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setUser((prevUser) => ({
@@ -26,15 +32,18 @@ function Profile() {
         }));
     };
 
+    // Function to trigger file input click
     const handleImageClick = () => {
         inputref.current.click();
     };
 
+    // Function to handle image file selection
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         setImage(file);
     };
 
+    // Function to handle saving of updated profile data
     const handleSave = async () => {
         try {
             console.log('Sending update request:', user);
@@ -65,7 +74,7 @@ function Profile() {
             const responseData = JSON.parse(responseText);
             console.log('Update response:', responseData);
 
-            // Update profile picture if a new one is selected
+             // Update profile picture if a new one is selected
             if (image) {
                 const formData = new FormData();
                 formData.append('profilePicture', image);
@@ -93,12 +102,14 @@ function Profile() {
                 const uploadData = JSON.parse(uploadResponseText);
                 console.log('Upload response:', uploadData);
 
+                // Update user state with new profile picture URL
                 setUser((prevUser) => ({
                     ...prevUser,
                     Profile_Picture: uploadData.profilePicture,
                 }));
             }
 
+            // Save updated user data to localStorage
             localStorage.setItem('user', JSON.stringify(user));
             alert('Profile updated successfully');
             setOriginalUser(user);
@@ -108,6 +119,7 @@ function Profile() {
         }
     };
 
+    // Function to cancel changes and reset to original user data
     const handleCancel = () => {
         setUser(originalUser);
         setImage(null);

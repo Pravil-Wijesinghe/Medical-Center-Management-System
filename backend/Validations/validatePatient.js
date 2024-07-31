@@ -43,6 +43,7 @@ const isValidPassword = (password) => {
     return password.length >= 8 && /[a-zA-Z]/.test(password) && /\d/.test(password);
 };
 
+// Main function to validate patient data
 const validatePatientData = (data) => {
     const { First_Name, Last_Name, NIC, Mobile_Number, Email, DOB, Password } = data;
 

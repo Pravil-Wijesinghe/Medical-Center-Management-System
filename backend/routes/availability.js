@@ -3,10 +3,11 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../DBConnect');
 
-// Save doctor's availability
+// Route to save or update a doctor's availability
 router.post('/', (req, res) => {
     const { Doctor_NIC, date, availability, start_time, close_time, note } = req.body;
 
+    // SQL query to insert or update doctor's availability
     const query = `
         INSERT INTO doctor_availability (Doctor_NIC, date, availability, start_time, close_time, note)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -16,6 +17,7 @@ router.post('/', (req, res) => {
         close_time = VALUES(close_time), 
         note = VALUES(note)`;
 
+        // Execute the query
     connection.query(query, [Doctor_NIC, date, availability, start_time, close_time, note], (err, results) => {
         if (err) {
             console.error('Error saving availability:', err);

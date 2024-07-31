@@ -6,12 +6,14 @@ import SearchBar from '../../Components/SearchBar';
 import axios from 'axios';
 
 function ViewPatients() {
+  // State variables
   const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
   const familyMember = [];
 
+  // Fetch patients data from the API on component mount
   useEffect(() => {
     const fetchPatients = async () => {
       try {
@@ -26,6 +28,7 @@ function ViewPatients() {
     fetchPatients();
   }, []);
 
+  // Filter patients based on the search term
   useEffect(() => {
     const results = patients.filter(
       (patient) =>
@@ -37,10 +40,12 @@ function ViewPatients() {
     setFilteredPatients(results);
   }, [searchTerm, patients]);
 
+  // Function to open the patient details popup
   const openPopup = (patient) => {
     setSelectedPatient(patient);
   };
 
+  // Function to close the patient details popup
   const closePopup = () => {
     setSelectedPatient(null);
   };

@@ -5,6 +5,7 @@ import DoctorNavBar from '../../Components/DoctorNavBar';
 import { Button } from '../../Components/Button';
 
 function Profile() {
+  // State to store doctor profile information
   const [doctor, setDoctor] = useState({
     First_Name: '',
     Last_Name: '',
@@ -14,9 +15,11 @@ function Profile() {
     Mobile_Number: '',
     Email: ''
   });
+  // State to store success or error messages
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    // Fetch doctor profile data when component mounts
     const fetchDoctorProfile = async () => {
       const storedUser = JSON.parse(localStorage.getItem('user'));
       if (storedUser && storedUser.NIC) {
@@ -24,6 +27,7 @@ function Profile() {
           const response = await fetch(`http://localhost:3000/doctor/${storedUser.NIC}`);
           if (response.ok) {
             const data = await response.json();
+            // Set doctor profile data
             setDoctor(data);
           } else {
             console.error('Failed to fetch doctor profile');
@@ -36,6 +40,7 @@ function Profile() {
     fetchDoctorProfile();
   }, []);
 
+  // Handle form input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
     setDoctor((prevDoctor) => ({
@@ -44,6 +49,7 @@ function Profile() {
     }));
   };
 
+  // Submit form to update doctor profile
   const handleSubmit = async (event) => {
     event.preventDefault();
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -59,12 +65,15 @@ function Profile() {
 
         if (response.ok) {
           const result = await response.json();
+          // Set success message
           setMessage(result.message);
         } else {
+          // Set error message
           setMessage('Failed to update profile');
         }
       } catch (error) {
         console.error('Error updating profile:', error);
+        // Set error message
         setMessage('Error updating profile');
       }
     }

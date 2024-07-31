@@ -5,6 +5,7 @@ const router = express.Router();
 const connection = require('../DBConnect');
 const validateDoctorData = require('../Validations/validateDoctor');
 
+// Route to update doctor information
 router.put('/:nic', (req, res) => {
     const { nic } = req.params;
     const { First_Name, Last_Name, Specialization, Mobile_Number, Email, Address, Password, Doctor_Fee, Room } = req.body;

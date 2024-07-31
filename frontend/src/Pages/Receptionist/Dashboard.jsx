@@ -39,9 +39,11 @@ ChartJS.register(
 );
 
 function Dashboard() {
+  // Refs for chart components
   const chartRef1 = useRef(null);
   const chartRef2 = useRef(null);
 
+  // State variables for counts and data
   const [counts, setCounts] = useState({
     totalPatients: 0,
     totalDoctors: 0,
@@ -60,6 +62,7 @@ function Dashboard() {
   const [selectedDoctorRoom, setSelectedDoctorRoom] = useState("");
   const [selectedDoctorStatus, setSelectedDoctorStatus] = useState("");
 
+  // Function to open the popup and fetch doctor details
   const openPopup = async (doctor) => {
     try {
       const response = await axios.get(`http://localhost:3000/doctorAvailability/${doctor.NIC}`);
@@ -71,7 +74,7 @@ function Dashboard() {
       console.error('Error fetching doctor details:', error);
     }
   };
-
+  // Function to close the popup
   const closePopup = () => {
     setSelectedDoctor(null);
     setSelectedDoctorAvailability([]);
@@ -79,6 +82,7 @@ function Dashboard() {
     setSelectedDoctorStatus("");
   };
 
+  // Fetch initial data when the component mounts
   useEffect(() => {
     const fetchCounts = async () => {
       try {
@@ -112,6 +116,7 @@ function Dashboard() {
     fetchDoctors();
   }, []);
 
+  // Set up charts and clean up when the component updates or unmounts
   useEffect(() => {
     const ctx1 = document.getElementById('myChart').getContext('2d');
     const ctx2 = document.getElementById('myChart2').getContext('2d');
@@ -123,6 +128,7 @@ function Dashboard() {
       chartRef2.current.destroy();
     }
 
+    // Create the bar chart for today's appointments
     chartRef1.current = new ChartJS(ctx1, {
       type: 'bar',
       data: {
@@ -169,6 +175,7 @@ function Dashboard() {
       },
     });
 
+    // Create the line chart for patients
     chartRef2.current = new ChartJS(ctx2, {
       type: 'line',
       data: {
@@ -190,7 +197,7 @@ function Dashboard() {
           },
           {
             label: 'All Patients',
-            data: [93, 107, 120, 100, 142, 82, 130], // Example data, replace with actual data
+            data: [93, 107, 120, 100, 142, 82, 130],
             fill: false,
             borderColor: 'rgba(192, 32, 39, 1)',
             tension: 0.1,
@@ -228,6 +235,7 @@ function Dashboard() {
       },
     });
 
+    // Clean up charts when component unmounts
     return () => {
       if (chartRef1.current) {
         chartRef1.current.destroy();
@@ -238,6 +246,7 @@ function Dashboard() {
     };
   }, [appointments]);
 
+  // Function to save updated doctor availability
   const handleSave = async () => {
     const updatedAvailability = selectedDoctorAvailability[0];
     updatedAvailability.Room = selectedDoctorRoom;
@@ -252,6 +261,7 @@ function Dashboard() {
     }
   };
 
+  // Function to delete doctor availability
   const handleDelete = async (availabilityId) => {
     try {
       const response = await axios.delete(`http://localhost:3000/doctorAvailability/${availabilityId}`);

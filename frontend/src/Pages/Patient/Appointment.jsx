@@ -6,27 +6,40 @@ import { TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import MakeAnAppontment from '../../Components/MakeAnAppontment.jsx';
 
 function Appointment() {
+  // State to manage the selection of all appointments
   const [selectAll, setSelectAll] = useState(false);
+  // State to manage the list of selected appointment numbers
   const [selectedAppointments, setSelectedAppointments] = useState([]);
+  // State to store the list of appointments
   const [appointments, setAppointments] = useState([]);
+  // State to manage the visibility of the delete confirmation modal
   const [showModal, setShowModal] = useState(false);
+  // State to manage the visibility of the "Make an Appointment" modal
   const [makeAppointment, setMakeAppointment] = useState(false);
 
+  // Fetch the appointments for the logged-in patient
   const fetchAppointments = async () => {
     try {
       const patientNIC = JSON.parse(localStorage.getItem('user')).NIC;
       const response = await fetch(`http://localhost:3000/appointment/patient/${patientNIC}`);
-      const data = await response.json();
-      setAppointments(data);
+      if (response.ok) {
+        const data = await response.json();
+        setAppointments(data);
+      } else {
+        console.error('Failed to fetch appointments:', response.statusText);
+      }
     } catch (error) {
       console.error('Error fetching appointments:', error);
     }
   };
+  
 
+  // Use useEffect to fetch appointments when the component mounts
   useEffect(() => {
     fetchAppointments();
   }, []);
 
+  // Handle the selection of all appointments
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
@@ -36,6 +49,7 @@ function Appointment() {
     }
   };
 
+  // Handle the selection of individual appointments
   const handleSelectAppointment = (appointmentNumber) => {
     if (selectedAppointments.includes(appointmentNumber)) {
       setSelectedAppointments(selectedAppointments.filter(apptNum => apptNum !== appointmentNumber));
@@ -44,14 +58,17 @@ function Appointment() {
     }
   };
 
+  // Handle the removal of selected appointments
   const handleRemoveSelected = () => {
     setShowModal(true);
   };
 
+  // Handle making a new appointment
   const handleMakeAppointment = () => {
     setMakeAppointment(true);
   };
 
+  // Confirm and remove the selected appointments
   const confirmRemove = async () => {
     try {
       const appointmentsToDelete = appointments.filter(appt =>
@@ -61,9 +78,9 @@ function Appointment() {
         Date: appt.Date,
         Doctor_NIC: appt.Doctor_NIC
       }));
-
+  
       console.log('Appointments to delete:', appointmentsToDelete);
-
+  
       const response = await fetch('http://localhost:3000/appointment/delete', {
         method: 'DELETE',
         headers: {
@@ -71,7 +88,7 @@ function Appointment() {
         },
         body: JSON.stringify({ appointments: appointmentsToDelete }),
       });
-
+  
       if (response.ok) {
         console.log('Appointments deleted successfully');
         setAppointments(appointments.filter(appt =>
@@ -87,12 +104,14 @@ function Appointment() {
     } catch (error) {
       console.error('Error deleting appointments:', error);
     }
-  };
+  };  
 
+  // Cancel the removal of selected appointments
   const cancelRemove = () => {
     setShowModal(false);
   };
 
+  // Close the "Make an Appointment" modal and refresh the appointment list
   const closeMakeAppointment = () => {
     setMakeAppointment(false);
     fetchAppointments(); // Refresh appointments list after making a new appointment

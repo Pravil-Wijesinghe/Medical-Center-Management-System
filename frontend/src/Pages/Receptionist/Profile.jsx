@@ -6,20 +6,28 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Profile() {
+  // State to store receptionist data
   const [receptionist, setReceptionist] = useState({});
+  // State to store form data
   const [formData, setFormData] = useState({});
+  // Navigation hook
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Get user data from local storage
     const userData = JSON.parse(localStorage.getItem('user'));
     if (userData) {
+      // Set receptionist state with user data
       setReceptionist(userData);
+      // Set form data state with user data
       setFormData(userData);
     }
   }, []);
 
   const handleInputChange = (e) => {
+    // Get input name and value
     const { name, value } = e.target;
+    // Update form data state with new value
     setFormData({
       ...formData,
       [name]: value
@@ -28,6 +36,7 @@ function Profile() {
 
   const handleSave = async () => {
     try {
+      // Send updated data to server
       const response = await axios.put('http://localhost:3000/receptionist/update', {
         nic: formData.NIC,
         firstName: formData.First_Name,
@@ -42,11 +51,13 @@ function Profile() {
         alert('Profile updated successfully');
       }
     } catch (error) {
+      // Show error message
       console.error('Error updating profile:', error);
       alert('An error occurred while updating the profile. Please try again.');
     }
   };
 
+  // Navigate to receptionist dashboard on cancel
   const handleCancel = () => {
     navigate('/ReceptionistDashboard');
   };

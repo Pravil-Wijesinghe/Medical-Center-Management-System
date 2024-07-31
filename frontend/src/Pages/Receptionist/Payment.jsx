@@ -3,17 +3,21 @@ import ReceptionistNavBar from '../../Components/ReceptionistNavBar';
 import axios from 'axios';
 
 function Payment() {
+  // State to store payments data
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
+    // Fetch payments data on component mount
     fetchPayments();
   }, []);
 
   const fetchPayments = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/payments');
+      // Update state with fetched data
       setPayments(response.data);
     } catch (error) {
+      // Log error if fetching fails
       console.error('Error fetching payments:', error);
     }
   };

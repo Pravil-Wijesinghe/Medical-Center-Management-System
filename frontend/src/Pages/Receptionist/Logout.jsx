@@ -9,6 +9,7 @@ function Logout() {
   const navigate = useNavigate();
 
   const handleCancel = () => {
+    // Navigate to Patient Profile page
     navigate('/PatientProfile');
   };
 

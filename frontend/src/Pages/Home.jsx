@@ -8,8 +8,10 @@ import {ChevronDoubleRightIcon, PhoneIcon, MapPinIcon} from '@heroicons/react/24
 import Logo from '../Images/Logo.png';
 
 function Home() {
+  // State to manage the visibility of the navigation bar based on scroll position
   const [hideNavBar, setHideNavBar] = useState(false);
 
+  // Effect to handle scroll events and toggle the visibility of the navigation bar
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -20,8 +22,10 @@ function Home() {
       }
     };
 
+    // Add scroll event
     window.addEventListener('scroll', handleScroll);
 
+    // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };

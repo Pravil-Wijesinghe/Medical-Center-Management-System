@@ -6,12 +6,15 @@ import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Button } from '../../Components/Button';
 
 function Logout() {
+  // Hook to navigate to different routes
   const navigate = useNavigate();
 
+  // Function to handle cancel action
   const handleCancel = () => {
     navigate('/PatientProfile');
   };
 
+  // Function to handle logout action
   const handleLogout = () => {
     // Clear user data from localStorage
     localStorage.removeItem('user');

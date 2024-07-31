@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../DBConnect');
 
-// Fetch doctor's profile information by NIC
+// Route to fetch doctor's profile information by NIC
 router.get('/:nic', (req, res) => {
     const { nic } = req.params;
     const query = 'SELECT * FROM doctor WHERE NIC = ?';
@@ -20,7 +20,7 @@ router.get('/:nic', (req, res) => {
     });
 });
 
-// Update doctor's profile information
+// Route to update doctor's profile information
 router.put('/:nic', (req, res) => {
     const { nic } = req.params;
     const { First_Name, Last_Name, Specialization, Address, Mobile_Number, Email } = req.body;
@@ -40,18 +40,17 @@ router.put('/:nic', (req, res) => {
 });
 
 
-// Get doctors
-router.get('/doctors', (req, res) => {
+// Route to get a list of all doctors
+router.get('/', (req, res) => {
     const query = 'SELECT NIC, First_Name, Last_Name FROM doctor';
     connection.query(query, (err, results) => {
         if (err) {
             console.error('Error fetching doctors:', err);
-            return res.status(500).json({ message: 'Error fetching doctors' });
+            return res.status(500).json({ message: 'Internal Server Error' });
         }
         res.status(200).json(results);
     });
 });
-
 
 
 module.exports = router;

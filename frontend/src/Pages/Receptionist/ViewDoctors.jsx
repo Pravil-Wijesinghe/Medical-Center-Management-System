@@ -13,10 +13,12 @@ function ViewDoctors() {
   const [doctorFee, setDoctorFee] = useState('');
   const [payment, setPayment] = useState('');
 
+  // Fetch doctors data when the component mounts
   useEffect(() => {
     fetchDoctors();
   }, []);
 
+  // Fetch doctors data from the backend
   const fetchDoctors = async () => {
     try {
       const response = await axios.get('http://localhost:3000/getDoctors');
@@ -26,22 +28,26 @@ function ViewDoctors() {
     }
   };
 
+  // Open the doctor details popup
   const openDoctorPopup = (doctor) => {
     setSelectedDoctor(doctor);
     setShowPaymentPopup(false);
   };
 
+  // Open the payment popup
   const openPaymentPopup = (doctor) => {
     setSelectedDoctor(doctor);
     setDoctorFee(doctor.Doctor_Fee);
     setShowPaymentPopup(true);
   };
 
+  // Close any open popup
   const closePopup = () => {
     setSelectedDoctor(null);
     setShowPaymentPopup(false);
   };
 
+  // Handle doctor update
   const handleUpdateDoctor = async () => {
     try {
       const response = await axios.put(`http://localhost:3000/updateDoctor/${selectedDoctor.NIC}`, selectedDoctor);
@@ -56,6 +62,7 @@ function ViewDoctors() {
     }
   };
 
+  // Handle doctor deletion
   const handleDeleteDoctor = async () => {
     try {
       const response = await axios.delete(`http://localhost:3000/deleteDoctor/${selectedDoctor.NIC}`);
@@ -70,6 +77,7 @@ function ViewDoctors() {
     }
   };
 
+  // Handle payment completion
   const handleCompletePayment = async () => {
     const paymentData = {
       Doctor_NIC: selectedDoctor.NIC,
@@ -89,12 +97,14 @@ function ViewDoctors() {
     }
   };
 
+  // Calculate payment when doctor fee or patients checked change
   useEffect(() => {
     if (doctorFee && patientsChecked) {
       setPayment(doctorFee * patientsChecked);
     }
   }, [doctorFee, patientsChecked]);
 
+  // Handle input change in doctor details form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSelectedDoctor({ ...selectedDoctor, [name]: value });

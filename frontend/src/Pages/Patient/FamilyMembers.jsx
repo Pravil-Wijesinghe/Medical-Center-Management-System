@@ -6,10 +6,15 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 
 function FamilyMembers() {
+  // State to manage select all checkbox
   const [selectAll, setSelectAll] = useState(false);
+  // State to keep track of selected family members
   const [selectedFamilyMembers, setSelectedFamilyMembers] = useState([]);
+  // State to hold the list of family members
   const [familyMembers, setFamilyMembers] = useState([]);
+  // State to control the visibility of the modal
   const [showModal, setShowModal] = useState(false);
+  // State to manage new family member details
   const [newFamilyMember, setNewFamilyMember] = useState({
     relationship: '',
     firstName: '',
@@ -22,6 +27,7 @@ function FamilyMembers() {
     bloodGroup: ''
   });
 
+  // Fetch family members when the component mounts or patientNic changes
   const patientNic = JSON.parse(localStorage.getItem('user')).NIC;
 
   useEffect(() => {
@@ -34,6 +40,7 @@ function FamilyMembers() {
       });
   }, [patientNic]);
 
+  // Toggle select all family members
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
@@ -43,6 +50,7 @@ function FamilyMembers() {
     }
   };
 
+  // Toggle individual family member selection
   const handleSelectMember = (memberId) => {
     if (selectedFamilyMembers.includes(memberId)) {
       setSelectedFamilyMembers(selectedFamilyMembers.filter(id => id !== memberId));
@@ -51,10 +59,12 @@ function FamilyMembers() {
     }
   };
 
+  // Show confirmation modal for removal
   const handleRemoveSelected = () => {
     setShowModal(true);
   };
 
+  // Confirm removal of selected family members
   const confirmRemove = () => {
     selectedFamilyMembers.forEach(memberId => {
       axios.delete(`http://localhost:3000/familyMember/${patientNic}/${memberId}`)
@@ -70,10 +80,12 @@ function FamilyMembers() {
     setShowModal(false);
   };
 
+  // Cancel the removal action
   const cancelRemove = () => {
     setShowModal(false);
   };
 
+  // Update new family member details
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewFamilyMember({
@@ -82,6 +94,7 @@ function FamilyMembers() {
     });
   };
 
+  // Save the new family member details
   const handleSaveMember = () => {
     axios.post('http://localhost:3000/familyMember', { ...newFamilyMember, patientNic })
       .then(response => {
@@ -103,6 +116,7 @@ function FamilyMembers() {
       });
   };
 
+  // Cancel adding new family member and reset the form
   const handleCancel = () => {
     setNewFamilyMember({
       relationship: '',

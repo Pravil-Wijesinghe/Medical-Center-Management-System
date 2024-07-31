@@ -9,9 +9,13 @@ import { Button } from '../../Components/Button';
 
 function MakeAnAppointment() {
 
+     // Days of the week
 const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+// Get current date
   const currentDate = dayjs();
+  // State for current month view
   const [today, setToday] = useState(currentDate);
+  // State for selected date
   const [selectDate, setSelectDate] = useState(currentDate);
 
 

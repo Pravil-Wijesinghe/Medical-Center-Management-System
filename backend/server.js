@@ -30,7 +30,7 @@ app.use('/appointment', appointmentRoutes);
 app.use('/login', loginRoutes);
 app.use('/signup', signupRoutes);
 app.use('/patient', patientRoutes);
-app.use('/doctor', doctorRoutes);
+app.use('/doctors', doctorRoutes);
 app.use('/familyMember', familyMemberRoutes);
 app.use('/receptionist', receptionistRoutes);
 app.use('/dashboard', dashboardRoutes);

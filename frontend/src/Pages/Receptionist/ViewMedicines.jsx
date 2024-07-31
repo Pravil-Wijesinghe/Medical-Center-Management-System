@@ -18,6 +18,7 @@ function ViewMedicines() {
         selling_price: '',
     });
 
+    // Fetch all medicines from the backend when the component mounts
     useEffect(() => {
         // Fetch all medicines from the backend
         axios.get('http://localhost:3000/medicine')
@@ -25,6 +26,7 @@ function ViewMedicines() {
             .catch(error => console.error('Error fetching medicines:', error));
     }, []);
 
+    // Open the popup and set the selected medicine and form data
     const openPopup = (medicine) => {
         setSelectedMedicine(medicine);
         setFormData({
@@ -38,6 +40,7 @@ function ViewMedicines() {
         });
     };
 
+    // Close the popup and reset the form data
     const closePopup = () => {
         setSelectedMedicine(null);
         setFormData({
@@ -51,10 +54,12 @@ function ViewMedicines() {
         });
     };
 
+    // Handle input changes in the form
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Handle form submission for updating a medicine
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {

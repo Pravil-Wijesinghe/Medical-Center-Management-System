@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../DBConnect');
 
-// Get total counts for patients, doctors, medicines, and upcoming appointments
+// Route to get total counts for patients, doctors, medicines, and upcoming appointments
 router.get('/counts', (req, res) => {
     const queries = {
         patients: 'SELECT COUNT(*) AS totalPatients FROM patient',
@@ -40,7 +40,7 @@ router.get('/counts', (req, res) => {
     });
 });
 
-// Get today's appointments divided into morning and evening
+// Route to get today's appointments divided into morning and evening
 router.get('/today-appointments', (req, res) => {
     const query = `
         SELECT 

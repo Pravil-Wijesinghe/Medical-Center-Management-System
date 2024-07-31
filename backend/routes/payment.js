@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../DBConnect');
 
+// Route to fetch payment details along with doctor information
 router.get('/payments', (req, res) => {
   const query = `
     SELECT p.Doctor_NIC, p.Patients, p.Payment, p.Issue_Date, d.First_Name, d.Last_Name

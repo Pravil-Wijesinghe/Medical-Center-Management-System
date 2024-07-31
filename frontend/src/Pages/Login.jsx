@@ -7,11 +7,16 @@ import validateLogin from '../Validation/LoginValidation';
 
 export default function Login() {
     const navigate = useNavigate();
+    // State to hold input values
     const [values, setValues] = useState({ nic: '', password: '' });
+    // State to hold validation errors
     const [errors, setErrors] = useState({});
+    // State to display error messages
     const [errorMessage, setErrorMessage] = useState('');
+    // State to toggle password visibility
     const [showPassword, setShowPassword] = useState(false);
 
+    // Handle input changes and update state values
     const handleInput = (event) => {
         const { name, value } = event.target;
         setValues(prevValues => ({
@@ -20,14 +25,18 @@ export default function Login() {
         }));
     };
 
+    // Handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
+        // Validate login inputs
         const validationErrors = validateLogin(values);
         setErrors(validationErrors);
 
+        // Proceed if no validation errors
         if (Object.keys(validationErrors).length === 0) {
             try {
                 console.log('Sending login request:', values);
+                // Send login request to the server
                 const response = await fetch('http://localhost:3000/login', {
                     method: 'POST',
                     headers: {
@@ -36,6 +45,7 @@ export default function Login() {
                     body: JSON.stringify(values),
                 });
 
+                // Handle server response
                 if (response.ok) {
                     const data = await response.json();
                     console.log('Login successful:', data);
@@ -52,6 +62,7 @@ export default function Login() {
         }
     };
 
+    // Toggle password visibility
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };

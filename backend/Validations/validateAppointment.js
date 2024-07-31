@@ -1,4 +1,7 @@
+// This function validates the data required for creating an appointment.
+
 const validateAppointmentData = (data) => {
+
     const { date, time, patientNIC, doctorNIC } = data;
 
     if (!date) {

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Signup() {
     const navigate = useNavigate();
+    // State to hold form data
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -17,20 +18,25 @@ export default function Signup() {
         password: '',
         confirmPassword: ''
     });
+    // State to toggle password visibility
     const [showPassword, setShowPassword] = useState(false);
 
+    // Handle input changes and update state values
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Check if passwords match
         if (formData.password !== formData.confirmPassword) {
             alert('Passwords do not match');
             return;
         }
 
+        // Send sign-up request to the server
         try {
             const response = await fetch('http://localhost:3000/signup', {
                 method: 'POST',
@@ -40,6 +46,7 @@ export default function Signup() {
                 body: JSON.stringify(formData),
             });
 
+            // Handle server response
             if (response.ok) {
                 alert('Sign-up successful');
                 navigate('/login');
@@ -53,6 +60,7 @@ export default function Signup() {
         }
     };
 
+    // Toggle password visibility
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };

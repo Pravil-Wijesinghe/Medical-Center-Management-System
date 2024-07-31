@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../DBConnect');
 
-// Fetch doctor details and their availability
+// Route to fetch doctor details and their availability
 router.get('/:doctorNIC', (req, res) => {
     const doctorNIC = req.params.doctorNIC;
 
@@ -30,7 +30,7 @@ router.get('/:doctorNIC', (req, res) => {
     });
 });
 
-// Update doctor availability
+// Route to update doctor availability
 router.put('/:id', (req, res) => {
     const { id } = req.params;
     const { availability, start_time, close_time, note } = req.body;
@@ -49,7 +49,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
-// Delete doctor availability
+// Route to delete doctor availability
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
 

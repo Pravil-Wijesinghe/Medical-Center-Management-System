@@ -6,13 +6,19 @@ const { getDoctors, makeAppointment, getAppointments, updateAppointment, deleteA
 const validateAppointmentData = require('../Validations/validateAppointment');
 const validateAppointmentDeletion = require('../Validations/validateAppointmentDeletion');
 
+// Route to fetch all doctors
 router.get('/doctors', getDoctors);
+// Route to make a new appointment
 router.post('/make', makeAppointment);
 
+// Route to fetch appointments based on optional query parameters
 router.get('/', getAppointments);
+// Route to update an existing appointment by ID
 router.put('/:id', updateAppointment);
+// Route to delete an appointment by ID
 router.delete('/:id', deleteAppointment);
 
+// Route to create a new appointment with validation and checks
 router.post('/create', (req, res) => {
     const { date, time, diseaseReport, patientNIC, relationship, doctorNIC } = req.body;
 
@@ -71,5 +77,57 @@ router.post('/create', (req, res) => {
         });
     });
 });
+
+// Route to fetch appointments for a specific patient based on NIC
+router.get('/patient/:nic', (req, res) => {
+    const { nic } = req.params;
+    const query = `
+        SELECT a.*, d.First_Name AS Doctor_First_Name, d.Last_Name AS Doctor_Last_Name
+        FROM appointment a
+        JOIN doctor d ON a.Doctor_NIC = d.NIC
+        WHERE a.Patient_NIC = ?`;
+
+    connection.query(query, [nic], (err, results) => {
+        if (err) {
+            console.error('Error fetching appointments:', err);
+            res.status(500).json({ message: 'Database error', error: err });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+// Route to delete multiple appointments
+router.delete('/delete', (req, res) => {
+    const { appointments } = req.body;
+  
+    const validation = validateAppointmentDeletion({ appointments });
+    if (!validation.valid) {
+      return res.status(400).json({ message: validation.message });
+    }
+  
+    const placeholders = appointments.map(() => '(?, ?, ?)').join(', ');
+    const values = appointments.flatMap(appt => [
+      appt.Appointment_Number,
+      appt.Date,
+      appt.Doctor_NIC
+    ]);
+  
+    const query = `
+      DELETE FROM appointment 
+      WHERE (Appointment_Number, Date, Doctor_NIC) IN (${placeholders})
+    `;
+  
+    connection.query(query, values, (err, results) => {
+      if (err) {
+        console.error('Error deleting appointments:', err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+      }
+      console.log('Delete results:', results);
+      res.status(200).json({ message: 'Appointments deleted successfully' });
+    });
+  });
+  
+  
 
 module.exports = router;

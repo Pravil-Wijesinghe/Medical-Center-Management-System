@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../DBConnect');
 
+// Route to delete a doctor by NIC (National Identity Card)
 router.delete('/:nic', (req, res) => {
     const { nic } = req.params;
 

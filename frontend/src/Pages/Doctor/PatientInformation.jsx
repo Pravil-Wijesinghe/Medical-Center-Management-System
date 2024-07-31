@@ -6,6 +6,7 @@ import { FunnelIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 function PatientInformation() {
+  // State to store appointments, selected patient, form values, and filters
   const [appointments, setAppointments] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [formValues, setFormValues] = useState({
@@ -17,10 +18,12 @@ function PatientInformation() {
   const [filterTime, setFilterTime] = useState('');
   const [allSelected, setAllSelected] = useState(false);
 
+  // Fetch appointments when component mounts
   useEffect(() => {
     fetchAppointments();
   }, []);
 
+  // Function to fetch appointments for the logged-in doctor
   const fetchAppointments = async () => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser && storedUser.NIC) {
@@ -38,6 +41,7 @@ function PatientInformation() {
     }
   };
 
+  // Open popup to view and edit patient details
   const openPopup = (appointment) => {
     setSelectedPatient(appointment);
     setFormValues({
@@ -47,10 +51,12 @@ function PatientInformation() {
     });
   };
 
+   // Close the popup
   const closePopup = () => {
     setSelectedPatient(null);
   };
 
+  // Handle form input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormValues((prevValues) => ({
@@ -59,6 +65,7 @@ function PatientInformation() {
     }));
   };
 
+  // Submit form to update appointment details
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (selectedPatient) {
@@ -75,6 +82,7 @@ function PatientInformation() {
           const result = await response.json();
           console.log(result.message);
           closePopup();
+          // Update appointment in the list
           setAppointments((prevAppointments) =>
             prevAppointments.map((appointment) =>
               appointment.Appointment_Number === selectedPatient.Appointment_Number
@@ -91,6 +99,7 @@ function PatientInformation() {
     }
   };
 
+  // Filter appointments based on date and time
   const handleFilter = async () => {
     if (!filterDate && !filterTime) {
       fetchAppointments();
@@ -110,12 +119,14 @@ function PatientInformation() {
     }
   };
 
+  // Clear filters and reset appointments list
   const clearFilter = () => {
     setFilterDate('');
     setFilterTime('');
     fetchAppointments();
   };
 
+  // Select or deselect all appointments
   const handleSelectAll = () => {
     setAllSelected(!allSelected);
     setAppointments((prevAppointments) =>
@@ -123,6 +134,7 @@ function PatientInformation() {
     );
   };
 
+  // Format date string to YYYY-MM-DD
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];

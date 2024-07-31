@@ -3,7 +3,7 @@ const router = express.Router();
 const connection = require('../DBConnect');
 const validateFamilyMember = require('../Validations/validateFamilyMember');
 
-// Fetch family members for a patient
+// Route to fetch family members for a specific patient
 router.get('/:patientNIC', (req, res) => {
     const patientNIC = req.params.patientNIC;
     const query = 'SELECT * FROM family_member WHERE Patient_NIC = ?';

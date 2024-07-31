@@ -5,10 +5,15 @@ import { FunnelIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import axios from 'axios';
 
 function ViewAppointments() {
+    // State to hold all appointments
     const [appointments, setAppointments] = useState([]);
+    // State for selected appointment
     const [selectedAppointment, setSelectedAppointment] = useState(null);
+    // State for filter date
     const [filterDate, setFilterDate] = useState('');
+    // State for filter time
     const [filterTime, setFilterTime] = useState('');
+    // State for form data
     const [formData, setFormData] = useState({
         Disease_Report: '',
         Diagnosis: '',
@@ -32,7 +37,9 @@ function ViewAppointments() {
     }, []);
 
     const openPopup = (appointment) => {
+        // Set the selected appointment
         setSelectedAppointment(appointment);
+        // Set form data with appointment details
         setFormData({
             Disease_Report: appointment.Disease_Report,
             Diagnosis: appointment.Diagnosis,
@@ -44,7 +51,9 @@ function ViewAppointments() {
     };
 
     const closePopup = () => {
+        // Clear selected appointment
         setSelectedAppointment(null);
+        // Clear form data
         setFormData({
             Disease_Report: '',
             Diagnosis: '',
@@ -57,6 +66,7 @@ function ViewAppointments() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        // Update form data
         setFormData({
             ...formData,
             [name]: value
@@ -65,30 +75,39 @@ function ViewAppointments() {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
+        // Calculate total payment
         const totalPayment = parseFloat(formData.doctorFee) + parseFloat(formData.medicineFee);
+        // Update form data with total payment
         const updatedData = { ...formData, Payment: totalPayment };
         try {
+            // Update appointment
             await axios.put(`http://localhost:3000/appointment/${selectedAppointment.Appointment_Number}`, updatedData);
             alert('Appointment updated successfully!');
+            // Close popup after update
             closePopup();
             // Refresh appointments list after update
             const response = await axios.get('http://localhost:3000/appointment');
+            // Set updated appointments
             setAppointments(response.data.map(appointment => ({
                 ...appointment,
                 Date: new Date(appointment.Date).toISOString().split('T')[0]
             })));
         } catch (error) {
+            // Log error if updating fails
             console.error('Error updating appointment:', error);
         }
     };
 
     const handleDelete = async () => {
         try {
+            // Delete appointment
             await axios.delete(`http://localhost:3000/appointment/${selectedAppointment.Appointment_Number}`);
             alert('Appointment deleted successfully!');
+            // Close popup after delete
             closePopup();
             // Refresh appointments list after delete
             const response = await axios.get('http://localhost:3000/appointment');
+            // Set updated appointments
             setAppointments(response.data.map(appointment => ({
                 ...appointment,
                 Date: new Date(appointment.Date).toISOString().split('T')[0]
@@ -98,6 +117,7 @@ function ViewAppointments() {
         }
     };
 
+    // Filter appointments by date and time
     const handleFilter = async () => {
         try {
             const response = await axios.get('http://localhost:3000/appointment', {
@@ -106,24 +126,28 @@ function ViewAppointments() {
                     time: filterTime
                 }
             });
+            // Set filtered appointments
             setAppointments(response.data.map(appointment => ({
                 ...appointment,
                 Date: new Date(appointment.Date).toISOString().split('T')[0]
             })));
         } catch (error) {
-            console.error('Error filtering appointments:', error);
+            console.error('Error filtering appointments:', error); // Log error if filtering fails
         }
     };
 
     const handleClear = () => {
+        // Clear filter date
         setFilterDate('');
+        // Clear filter time
         setFilterTime('');
+        // Set all appointments
         axios.get('http://localhost:3000/appointment')
             .then(response => setAppointments(response.data.map(appointment => ({
                 ...appointment,
                 Date: new Date(appointment.Date).toISOString().split('T')[0]
             }))))
-            .catch(error => console.error('Error fetching appointments:', error));
+            .catch(error => console.error('Error fetching appointments:', error)); // Log error if fetching fails
     };
 
     return (

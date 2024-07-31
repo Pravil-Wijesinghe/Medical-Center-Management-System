@@ -4,6 +4,7 @@ import { Button } from '../../Components/Button';
 import axios from 'axios';
 
 function AddMedicine() {
+   // Initialize state with default form data
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -14,14 +15,16 @@ function AddMedicine() {
     selling_price: '',
   });
 
+  // Update formData state when input values change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle file input changes
   const handleFileChange = (e) => {
-    // Handle file upload logic if needed
   };
 
+  // Submit form data to the server
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -42,6 +45,7 @@ function AddMedicine() {
     }
   };
 
+  // Reset form fields to default values
   const handleCancel = () => {
     setFormData({
       name: '',

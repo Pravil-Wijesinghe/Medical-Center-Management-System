@@ -41,6 +41,7 @@ const isValidPassword = (password) => {
     return password.length >= 8 && /[a-zA-Z]/.test(password) && /\d/.test(password);
 };
 
+// Main function to validate signup data
 const validateSignupData = (data) => {
     const { firstName, lastName, nicNumber, mobileNumber, email, dateOfBirth, password } = data;
 

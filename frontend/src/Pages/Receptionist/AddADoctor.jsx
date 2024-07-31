@@ -4,6 +4,7 @@ import { Button } from '../../Components/Button';
 import axios from 'axios';
 
 function AddADoctor() {
+  // State to manage form data and messages
   const [formData, setFormData] = useState({
     NIC: '',
     First_Name: '',
@@ -20,6 +21,7 @@ function AddADoctor() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Handle changes in form inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -28,12 +30,14 @@ function AddADoctor() {
     });
   };
 
+  // Handle adding a new doctor
   const handleAddDoctor = async () => {
     try {
       const response = await axios.post('http://localhost:3000/addDoctor', formData);
       if (response.status === 201) {
         setSuccessMessage('Doctor added successfully');
         setErrorMessage('');
+        // Clear the form after successful addition
         setFormData({
           NIC: '',
           First_Name: '',
@@ -55,6 +59,7 @@ function AddADoctor() {
     }
   };
 
+  // Handle cancel button click
   const handleCancel = () => {
     setFormData({
       NIC: '',
