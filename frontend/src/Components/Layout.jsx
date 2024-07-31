@@ -1,3 +1,4 @@
+// layout of the website
 import React from 'react'
 
 export default function Layout() {

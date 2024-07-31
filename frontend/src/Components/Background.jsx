@@ -1,3 +1,4 @@
+//components to display the background image and gradient
 import React from 'react'
 import bgImage2 from '../Images/bgImage2.png';
 

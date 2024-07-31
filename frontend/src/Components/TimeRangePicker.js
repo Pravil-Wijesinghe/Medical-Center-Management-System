@@ -1,3 +1,4 @@
+// Time range picker component for selecting start and end time
 import React, { useState } from 'react';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';

@@ -1,3 +1,4 @@
+//component for the menu items to import to navigation bar
 export const MenuItems = [
     {
         title : 'Home',

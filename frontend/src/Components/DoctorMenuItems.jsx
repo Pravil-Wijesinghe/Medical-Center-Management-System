@@ -1,3 +1,4 @@
+//Menu items for Doctor to import to DoctorNavBar.jsx
 export const DoctorMenuItems = [
     {
         title : 'Profile',

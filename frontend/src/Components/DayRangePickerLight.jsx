@@ -1,5 +1,7 @@
+// component to select days of the week
 import React, { useState } from 'react';
 
+// array of days of the week
 const daysOfWeek = [
   { name: 'Sunday', abbr: 'Sun' },
   { name: 'Monday', abbr: 'Mon' },

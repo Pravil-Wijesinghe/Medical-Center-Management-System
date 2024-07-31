@@ -1,3 +1,4 @@
+// Patient menu items to import to patient's navigation bar
 export const PatientMenuItems = [
     {
         title : 'Profile',

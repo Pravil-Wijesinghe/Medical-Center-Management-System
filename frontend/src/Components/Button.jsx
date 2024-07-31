@@ -1,3 +1,4 @@
+// Code to create a button component that can be used in other components
 import React from 'react'
 import PropTypes from 'prop-types';
 

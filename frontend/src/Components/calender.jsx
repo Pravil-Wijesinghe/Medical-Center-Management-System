@@ -1,9 +1,11 @@
+// component to generate the date and month for the calendar.
 import dayjs from "dayjs";
 
 export const generateDate = (
 	month = dayjs().month(),
 	year = dayjs().year()
 ) => {
+	// get the first and last date of the month
 	const firstDateOfMonth = dayjs().year(year).month(month).startOf("month");
 	const lastDateOfMonth = dayjs().year(year).month(month).endOf("month");
 

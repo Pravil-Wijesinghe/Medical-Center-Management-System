@@ -1,4 +1,5 @@
 // frontend/src/Components/MakeAnAppointment.jsx
+//component to Make an appointment
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { generateDate, months } from './calender';

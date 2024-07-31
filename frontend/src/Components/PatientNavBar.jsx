@@ -1,3 +1,4 @@
+// Navigation bar for the patient
 import React, { useEffect, useState } from 'react';
 import Logo from '../Images/Logo.png';
 import { PatientMenuItems } from './PatientMenuItems';

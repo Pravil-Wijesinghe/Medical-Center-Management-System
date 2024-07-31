@@ -1,3 +1,4 @@
+// Menu items for the Receptionist to import to the Receptionist's navigation bar
 export const ReceptionistMenuItems = [
     {
         title: 'Dashboard',

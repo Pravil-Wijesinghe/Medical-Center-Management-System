@@ -1,12 +1,15 @@
 // frontend/src/Components/DoctorNavBar.jsx
+// navigaton bar for doctor
 import React, { useEffect, useState } from 'react';
 import Logo from '../Images/Logo.png';
 import { Link } from 'react-router-dom';
 import { DoctorMenuItems } from './DoctorMenuItems';
 
 function DoctorNavBar() {
+  // get the doctor name from the local storage
   const [doctorName, setDoctorName] = useState('User');
 
+  // fetch the doctor name from the local storage
   useEffect(() => {
     const fetchDoctorName = () => {
       const storedUser = JSON.parse(localStorage.getItem('user'));

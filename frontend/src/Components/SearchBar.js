@@ -1,3 +1,4 @@
+// Search bar component for the search bar in the header
 import React from 'react';
 import { MagnifyingGlassIcon  } from '@heroicons/react/24/outline';
 

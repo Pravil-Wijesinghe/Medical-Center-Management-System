@@ -1,3 +1,4 @@
+// Navigation bar for the website
 import React from 'react'
 import Logo from '../Images/Logo.png';
 import {MenuItems} from '../Components/MenuItems'

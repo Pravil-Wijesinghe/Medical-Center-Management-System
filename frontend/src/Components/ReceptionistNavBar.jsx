@@ -1,3 +1,4 @@
+// Navigation bar for the receptionist
 import React, { useEffect, useState } from 'react';
 import Logo from '../Images/Logo.png';
 import { Link } from 'react-router-dom';
