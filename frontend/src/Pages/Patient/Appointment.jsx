@@ -3,7 +3,7 @@ import Background from '../../Components/Background.jsx';
 import { Button } from '../../Components/Button.jsx';
 import PatientNavBar from '../../Components/PatientNavBar.jsx';
 import { TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import MakeAnAppontment from '../../Components/MakeAnAppontment.jsx';
+import MakeAnAppontment from '../../Components/MakeAnAppontment3.jsx';
 
 function Appointment() {
   // State to manage the selection of all appointments

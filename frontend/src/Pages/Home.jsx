@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import bgImage1 from '../Images/bgImage1.png';
 import bgImage2 from '../Images/bgImage2.png';
 import NavBar from '../Components/NavBar';
-import MakeAnAppointment from '../Components/MakeAnAppontment';
+import MakeAnAppointment from '../Components/MakeAnAppontment3';
 import { Link } from 'react-router-dom';
 import {ChevronDoubleRightIcon, PhoneIcon, MapPinIcon} from '@heroicons/react/24/outline';
 import Logo from '../Images/Logo.png';
