@@ -1,3 +1,7 @@
+# How to use Tailwind CSS with MUI Components
+
+https://kir4n.hashnode.dev/mui-with-tailwind-css
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
