@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { addDoctorController } = require('../controllers/doctorController');
+const { addDoctorController ,getDoctorDetails } = require('../controllers/doctorController');
 
 router.post('/add', addDoctorController);
+router.get('/:doctorId', getDoctorDetails);
 
 module.exports = router;

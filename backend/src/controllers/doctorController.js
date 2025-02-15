@@ -29,4 +29,29 @@ const addDoctorController = (req, res) => {
     });
 };
 
-module.exports = { addDoctorController };
+// Get doctor details by doctorId
+const getDoctorDetails = (req, res) => {
+    const doctorId = req.params.doctorId;
+
+    // SQL query to get doctor details
+    const sql = `
+        SELECT user.userId, user.username, user.profilePicture, doctor.firstName, doctor.lastName, doctor.specialization, doctor.phoneNumber, doctor.email
+        FROM user
+        INNER JOIN doctor ON user.userId = doctor.userId
+        WHERE doctor.doctorId = ?`;
+
+    db.query(sql, [doctorId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        const doctorDetails = results[0];
+        return res.json({ doctor: doctorDetails });
+    });
+};
+
+module.exports = { addDoctorController, getDoctorDetails };
