@@ -175,4 +175,31 @@ const updateStaffMember = (req, res) => {
     });
 };
 
-module.exports = { addStaffMember, getStaffDetails, getStaffList, updateStaffMember };
+const deleteStaffMember = (req, res) => {
+    const staffId = req.params.staffId;
+
+    // Fetch the userId of the staff member from the staff table
+    const getUserIdQuery = `SELECT userId FROM staff WHERE staffId = ?`;
+    db.query(getUserIdQuery, [staffId], (err, results) => {
+        if (err) return res.status(500).json({ message: 'Database error while fetching userId' });
+        if (results.length === 0) return res.status(404).json({ message: 'Staff member not found' });
+
+        const userId = results[0].userId;
+
+        // Update isDelete to true in the staff table
+        const updateStaffQuery = `UPDATE staff SET isDelete = true WHERE staffId = ?`;
+        db.query(updateStaffQuery, [staffId], (err) => {
+            if (err) return res.status(500).json({ message: 'Error updating staff record' });
+
+            // Update isDelete to true in the user table
+            const updateUserQuery = `UPDATE user SET isDelete = true WHERE userId = ?`;
+            db.query(updateUserQuery, [userId], (err) => {
+                if (err) return res.status(500).json({ message: 'Error updating user record' });
+
+                return res.status(200).json({ message: 'Staff member deleted successfully' });
+            });
+        });
+    });
+};
+
+module.exports = { addStaffMember, getStaffDetails, getStaffList, updateStaffMember, deleteStaffMember };
