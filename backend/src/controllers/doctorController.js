@@ -62,7 +62,7 @@ const getDoctorsList = (req, res) => {
 
     // SQL query to get doctors with pagination and search
     let sql = `
-        SELECT user.userId, user.username, user.profilePicture, doctor.firstName, doctor.lastName, doctor.specialization, doctor.phoneNumber, doctor.email
+        SELECT user.userId, user.username, user.profilePicture, doctor.doctorId, doctor.firstName, doctor.lastName, doctor.specialization, doctor.phoneNumber, doctor.email
         FROM user
         INNER JOIN doctor ON user.userId = doctor.userId
         WHERE doctor.firstName LIKE ? OR doctor.lastName LIKE ? OR doctor.specialization LIKE ? OR doctor.email LIKE ?
@@ -99,4 +99,72 @@ const getDoctorsList = (req, res) => {
     });
 };
 
-module.exports = { addDoctorController, getDoctorDetails, getDoctorsList };
+const updateDoctor = (req, res) => {
+    const doctorId = req.params.doctorId;
+    const { firstName, lastName, specialization, phoneNumber, email, username, profilePicture } = req.body;
+
+    if (!doctorId) {
+        return res.status(400).json({ message: 'Doctor ID is required' });
+    }
+
+    // Start a transaction to update both tables
+    db.beginTransaction(err => {
+        if (err) {
+            return res.status(500).json({ message: 'Transaction error' });
+        }
+
+        // Update the `doctor` table
+        const doctorUpdateQuery = `
+            UPDATE doctor 
+            SET firstName = ?, lastName = ?, specialization = ?, phoneNumber = ?, email = ?
+            WHERE doctorId = ?
+        `;
+
+        db.query(doctorUpdateQuery, [firstName, lastName, specialization, phoneNumber, email, doctorId], (err, result) => {
+            if (err) {
+                return db.rollback(() => {
+                    res.status(500).json({ message: 'Error updating doctor details' });
+                });
+            }
+
+            // Find `userId` from `doctorId`
+            const userIdQuery = `SELECT userId FROM doctor WHERE doctorId = ?`;
+            db.query(userIdQuery, [doctorId], (err, results) => {
+                if (err || results.length === 0) {
+                    return db.rollback(() => {
+                        res.status(500).json({ message: 'Error finding user ID' });
+                    });
+                }
+
+                const userId = results[0].userId;
+
+                // Update the `user` table
+                const userUpdateQuery = `
+                    UPDATE user 
+                    SET username = ?, profilePicture = ?
+                    WHERE userId = ?
+                `;
+
+                db.query(userUpdateQuery, [username, profilePicture, userId], (err, result) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.status(500).json({ message: 'Error updating user details' });
+                        });
+                    }
+
+                    // Commit the transaction if both updates succeed
+                    db.commit(err => {
+                        if (err) {
+                            return db.rollback(() => {
+                                res.status(500).json({ message: 'Transaction commit error' });
+                            });
+                        }
+                        res.json({ message: 'Doctor updated successfully' });
+                    });
+                });
+            });
+        });
+    });
+};
+
+module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor };
