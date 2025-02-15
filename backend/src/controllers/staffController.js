@@ -37,4 +37,34 @@ const addStaffMember = (req, res) => {
     });
 };
 
-module.exports = { addStaffMember };
+const getStaffDetails = (req, res) => {
+    const { staffId } = req.params;
+
+    // Validate staffId
+    if (!staffId) {
+        return res.status(400).json({ message: 'Staff ID is required' });
+    }
+
+    // SQL query to fetch staff details along with user data
+    const sql = `
+        SELECT 
+            staff.staffId, staff.firstName, staff.lastName, staff.role, staff.phoneNumber, staff.email,
+            user.userId, user.username, user.password, user.profilePicture
+        FROM staff
+        INNER JOIN user ON staff.userId = user.userId
+        WHERE staff.staffId = ?`;
+
+    db.query(sql, [staffId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Staff member not found' });
+        }
+
+        return res.json({ staff: results[0] });
+    });
+};
+
+module.exports = { addStaffMember, getStaffDetails };
