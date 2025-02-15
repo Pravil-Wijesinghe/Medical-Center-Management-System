@@ -16,6 +16,7 @@ const doctorRoutes = require('./routes/doctorRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const patientRoutes = require('./routes/patientRoutes');
+const staffRoutes = require('./routes/staffRoutes');
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
@@ -23,6 +24,7 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/patients', patientRoutes);
+app.use('/api/staff', staffRoutes);
 
 // Start the Server
 const PORT = process.env.PORT || 5000;
