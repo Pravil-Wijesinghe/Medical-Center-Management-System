@@ -44,16 +44,16 @@ const getUserDetails = (role, userId, callback) => {
     let sql = '';
     switch (role.toLowerCase()) {
         case 'admin':
-            sql = 'SELECT firstName, lastName, email, phoneNumber FROM admin WHERE userId = ?';
+            sql = 'SELECT adminId, firstName, lastName, email, phoneNumber FROM admin WHERE userId = ?';
             break;
         case 'doctor':
-            sql = 'SELECT firstName, lastName, specialty, phoneNumber FROM doctor WHERE userId = ?';
+            sql = 'SELECT doctorId, firstName, lastName, specialization, phoneNumber, email FROM doctor WHERE userId = ?';
             break;
         case 'patient':
-            sql = 'SELECT firstName, lastName, address, phoneNumber, email FROM patient WHERE userId = ?';
+            sql = 'SELECT patientId, firstName, lastName, address, phoneNumber, email FROM patient WHERE userId = ?';
             break;
         case 'staff':
-            sql = 'SELECT firstName, lastName, department, phoneNumber FROM staff WHERE userId = ?';
+            sql = 'SELECT staffId, firstName, lastName, department, phoneNumber FROM staff WHERE userId = ?';
             break;
         default:
             return callback(null, {}); // No additional details for unknown roles
