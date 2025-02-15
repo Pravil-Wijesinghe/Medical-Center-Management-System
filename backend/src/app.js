@@ -11,16 +11,16 @@ app.use(express.json());
 
 // Import Routes
 const userRoutes = require('./routes/userRoutes');
-app.use('/api/users', userRoutes);
-
 const authRoutes = require('./routes/authRoutes');
-app.use('/api/auth', authRoutes);
-
 const doctorRoutes = require('./routes/doctorRoutes');
-app.use('/api/doctors', doctorRoutes);
-
 const uploadRoutes = require('./routes/uploadRoutes');
+const profileRoutes = require('./routes/profileRoutes');
+
+app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/doctors', doctorRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/profile', profileRoutes);
 
 // Start the Server
 const PORT = process.env.PORT || 5000;
