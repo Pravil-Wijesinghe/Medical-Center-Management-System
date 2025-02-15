@@ -91,4 +91,47 @@ const getPatientsList = (req, res) => {
     });
 };
 
-module.exports = { getPatientDetails, getPatientsList };
+const updatePatient = (req, res) => {
+    const patientId = req.params.patientId; // Get patientId from URL params
+    const { firstName, lastName, address, phoneNumber, email, username, profilePicture } = req.body;
+
+    if (!firstName || !lastName || !address || !phoneNumber || !email || !username) {
+        return res.status(400).json({ message: 'All required fields must be provided' });
+    }
+
+    // First, get the userId associated with the patientId
+    const getUserIdQuery = 'SELECT userId FROM patient WHERE patientId = ?';
+
+    db.query(getUserIdQuery, [patientId], (err, results) => {
+        if (err) return res.status(500).json({ message: 'Database error' });
+        if (results.length === 0) return res.status(404).json({ message: 'Patient not found' });
+
+        const userId = results[0].userId;
+
+        // Update `patient` table
+        const updatePatientQuery = `
+            UPDATE patient 
+            SET firstName = ?, lastName = ?, address = ?, phoneNumber = ?, email = ?
+            WHERE patientId = ?
+        `;
+
+        db.query(updatePatientQuery, [firstName, lastName, address, phoneNumber, email, patientId], (err) => {
+            if (err) return res.status(500).json({ message: 'Error updating patient details' });
+
+            // Update `user` table
+            const updateUserQuery = `
+                UPDATE user 
+                SET username = ?, profilePicture = ?
+                WHERE userId = ?
+            `;
+
+            db.query(updateUserQuery, [username, profilePicture, userId], (err) => {
+                if (err) return res.status(500).json({ message: 'Error updating user details' });
+
+                return res.json({ message: 'Patient details updated successfully' });
+            });
+        });
+    });
+};
+
+module.exports = { getPatientDetails, getPatientsList, updatePatient };
