@@ -167,4 +167,32 @@ const updateDoctor = (req, res) => {
     });
 };
 
-module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor };
+// Delete Doctor by doctorId
+const deleteDoctor = (req, res) => {
+    const doctorId = req.params.doctorId;
+
+    // Fetch the userId of the doctor
+    const getUserIdQuery = `SELECT userId FROM doctor WHERE doctorId = ?`;
+    db.query(getUserIdQuery, [doctorId], (err, results) => {
+        if (err) return res.status(500).json({ message: 'Database error while fetching userId' });
+        if (results.length === 0) return res.status(404).json({ message: 'Doctor not found' });
+
+        const userId = results[0].userId;
+
+        // Update isDelete to true in the doctor table
+        const updateDoctorQuery = `UPDATE doctor SET isDelete = true WHERE doctorId = ?`;
+        db.query(updateDoctorQuery, [doctorId], (err) => {
+            if (err) return res.status(500).json({ message: 'Error updating doctor record' });
+
+            // Update isDelete to true in the user table
+            const updateUserQuery = `UPDATE user SET isDelete = true WHERE userId = ?`;
+            db.query(updateUserQuery, [userId], (err) => {
+                if (err) return res.status(500).json({ message: 'Error updating user record' });
+
+                return res.status(200).json({ message: 'Doctor deleted successfully' });
+            });
+        });
+    });
+};
+
+module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor, deleteDoctor };
