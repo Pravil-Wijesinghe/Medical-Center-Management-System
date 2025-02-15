@@ -54,4 +54,49 @@ const getDoctorDetails = (req, res) => {
     });
 };
 
-module.exports = { addDoctorController, getDoctorDetails };
+// Get a list of doctors with pagination and search criteria
+const getDoctorsList = (req, res) => {
+    console.log("Get Doctors List API Hit");
+    const { page = 1, limit = 10, search = '' } = req.body; // Default to page 1 and limit 10 if not provided
+    const offset = (page - 1) * limit;
+
+    // SQL query to get doctors with pagination and search
+    let sql = `
+        SELECT user.userId, user.username, user.profilePicture, doctor.firstName, doctor.lastName, doctor.specialization, doctor.phoneNumber, doctor.email
+        FROM user
+        INNER JOIN doctor ON user.userId = doctor.userId
+        WHERE doctor.firstName LIKE ? OR doctor.lastName LIKE ? OR doctor.specialization LIKE ? OR doctor.email LIKE ?
+        LIMIT ? OFFSET ?
+    `;
+    
+    const searchTerm = `%${search}%`;
+
+    db.query(sql, [searchTerm, searchTerm, searchTerm, searchTerm, limit, offset], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        // Get the total number of doctors to calculate the total pages
+        const countSql = `SELECT COUNT(*) as total FROM doctor WHERE firstName LIKE ? OR lastName LIKE ? OR specialization LIKE ? OR email LIKE ?`;
+        
+        db.query(countSql, [searchTerm, searchTerm, searchTerm, searchTerm], (err, countResults) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error' });
+            }
+
+            const totalDoctors = countResults[0].total;
+            const totalPages = Math.ceil(totalDoctors / limit);
+
+            return res.json({
+                doctors: results,
+                pagination: {
+                    currentPage: page,
+                    totalPages: totalPages,
+                    totalDoctors: totalDoctors
+                }
+            });
+        });
+    });
+};
+
+module.exports = { addDoctorController, getDoctorDetails, getDoctorsList };
