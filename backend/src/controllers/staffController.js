@@ -67,4 +67,112 @@ const getStaffDetails = (req, res) => {
     });
 };
 
-module.exports = { addStaffMember, getStaffDetails };
+const getStaffList = (req, res) => {
+    console.log("Get Staff List API Hit");
+
+    const { page = 1, limit = 10, search = '' } = req.body; // Default values
+    const offset = (page - 1) * limit;
+    const searchTerm = `%${search}%`;
+
+    // SQL query to fetch staff members with search and pagination
+    let sql = `
+        SELECT 
+            staff.staffId, staff.firstName, staff.lastName, staff.role, staff.phoneNumber, staff.email,
+            user.userId, user.username, user.profilePicture
+        FROM staff
+        INNER JOIN user ON staff.userId = user.userId
+        WHERE 
+            staff.firstName LIKE ? OR 
+            staff.lastName LIKE ? OR 
+            staff.role LIKE ? OR 
+            staff.phoneNumber LIKE ? OR 
+            staff.email LIKE ? OR 
+            user.username LIKE ?
+        LIMIT ? OFFSET ?`;
+
+    db.query(sql, [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, limit, offset], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        // Query to get total count for pagination
+        const countSql = `
+            SELECT COUNT(*) as total 
+            FROM staff 
+            INNER JOIN user ON staff.userId = user.userId
+            WHERE 
+                staff.firstName LIKE ? OR 
+                staff.lastName LIKE ? OR 
+                staff.role LIKE ? OR 
+                staff.phoneNumber LIKE ? OR 
+                staff.email LIKE ? OR 
+                user.username LIKE ?`;
+
+        db.query(countSql, [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm], (err, countResults) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error' });
+            }
+
+            const totalStaff = countResults[0].total;
+            const totalPages = Math.ceil(totalStaff / limit);
+
+            return res.json({
+                staff: results,
+                pagination: {
+                    currentPage: page,
+                    totalPages: totalPages,
+                    totalStaff: totalStaff
+                }
+            });
+        });
+    });
+};
+
+const updateStaffMember = (req, res) => {
+    const staffId = req.params.staffId;
+    const { firstName, lastName, role, phoneNumber, email, username, profilePicture } = req.body;
+
+    // Validate required fields
+    if (!firstName || !lastName || !role || !phoneNumber || !email || !username) {
+        return res.status(400).json({ message: 'All required fields must be provided' });
+    }
+
+    // Check if role is valid
+    const validRoles = ['Nurse', 'Attendant', 'Cashier'];
+    if (!validRoles.includes(role)) {
+        return res.status(400).json({ message: 'Invalid role. Role must be Nurse, Attendant, or Cashier.' });
+    }
+
+    // First, fetch userId from staffId
+    const getUserIdQuery = `SELECT userId FROM staff WHERE staffId = ?`;
+    db.query(getUserIdQuery, [staffId], (err, results) => {
+        if (err) return res.status(500).json({ message: 'Database error while fetching userId' });
+        if (results.length === 0) return res.status(404).json({ message: 'Staff member not found' });
+
+        const userId = results[0].userId;
+
+        // Update staff table
+        const updateStaffQuery = `
+            UPDATE staff 
+            SET firstName = ?, lastName = ?, role = ?, phoneNumber = ?, email = ? 
+            WHERE staffId = ?`;
+        
+        db.query(updateStaffQuery, [firstName, lastName, role, phoneNumber, email, staffId], (err) => {
+            if (err) return res.status(500).json({ message: 'Error updating staff details' });
+
+            // Update user table
+            const updateUserQuery = `
+                UPDATE user 
+                SET username = ?, profilePicture = ? 
+                WHERE userId = ?`;
+
+            db.query(updateUserQuery, [username, profilePicture, userId], (err) => {
+                if (err) return res.status(500).json({ message: 'Error updating user details' });
+
+                return res.status(200).json({ message: 'Staff member updated successfully' });
+            });
+        });
+    });
+};
+
+module.exports = { addStaffMember, getStaffDetails, getStaffList, updateStaffMember };
