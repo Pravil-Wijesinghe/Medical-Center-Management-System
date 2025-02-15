@@ -35,7 +35,7 @@ const getDoctorDetails = (req, res) => {
 
     // SQL query to get doctor details
     const sql = `
-        SELECT user.userId, user.username, user.profilePicture, doctor.firstName, doctor.lastName, doctor.specialization, doctor.phoneNumber, doctor.email
+        SELECT user.userId, user.username, user.profilePicture, user.isDelete, doctor.firstName, doctor.lastName, doctor.specialization, doctor.phoneNumber, doctor.email
         FROM user
         INNER JOIN doctor ON user.userId = doctor.userId
         WHERE doctor.doctorId = ?`;
@@ -57,31 +57,55 @@ const getDoctorDetails = (req, res) => {
 // Get a list of doctors with pagination and search criteria
 const getDoctorsList = (req, res) => {
     console.log("Get Doctors List API Hit");
-    const { page = 1, limit = 10, search = '' } = req.body; // Default to page 1 and limit 10 if not provided
-    const offset = (page - 1) * limit;
 
-    // SQL query to get doctors with pagination and search
-    let sql = `
-        SELECT user.userId, user.username, user.profilePicture, doctor.doctorId, doctor.firstName, doctor.lastName, doctor.specialization, doctor.phoneNumber, doctor.email
-        FROM user
-        INNER JOIN doctor ON user.userId = doctor.userId
-        WHERE doctor.firstName LIKE ? OR doctor.lastName LIKE ? OR doctor.specialization LIKE ? OR doctor.email LIKE ?
-        LIMIT ? OFFSET ?
-    `;
-    
+    let { page = 1, limit = 10, search = '', isDelete } = req.body; // Default values
+    const offset = (page - 1) * limit;
     const searchTerm = `%${search}%`;
 
-    db.query(sql, [searchTerm, searchTerm, searchTerm, searchTerm, limit, offset], (err, results) => {
+    // Base query
+    let sql = `
+        SELECT user.userId, user.username, user.profilePicture, user.isDelete, 
+               doctor.doctorId, doctor.firstName, doctor.lastName, doctor.specialization, 
+               doctor.phoneNumber, doctor.email
+        FROM user
+        INNER JOIN doctor ON user.userId = doctor.userId
+        WHERE 
+            (doctor.firstName LIKE ? OR 
+             doctor.lastName LIKE ? OR 
+             doctor.specialization LIKE ? OR 
+             doctor.email LIKE ?)
+    `;
+
+    let countSql = `
+        SELECT COUNT(*) as total 
+        FROM user 
+        INNER JOIN doctor ON user.userId = doctor.userId
+        WHERE 
+            (doctor.firstName LIKE ? OR 
+             doctor.lastName LIKE ? OR 
+             doctor.specialization LIKE ? OR 
+             doctor.email LIKE ?)
+    `;
+
+    // If isDelete is provided (not null/undefined), filter by it
+    let queryParams = [searchTerm, searchTerm, searchTerm, searchTerm];
+    if (isDelete !== undefined && isDelete !== null) {
+        sql += " AND user.isDelete = ?";
+        countSql += " AND user.isDelete = ?";
+        queryParams.push(isDelete);
+    }
+
+    sql += " LIMIT ? OFFSET ?";
+    queryParams.push(Number(limit), Number(offset));
+
+    db.query(sql, queryParams, (err, results) => {
         if (err) {
-            return res.status(500).json({ message: 'Database error' });
+            return res.status(500).json({ message: 'Database error', error: err });
         }
 
-        // Get the total number of doctors to calculate the total pages
-        const countSql = `SELECT COUNT(*) as total FROM doctor WHERE firstName LIKE ? OR lastName LIKE ? OR specialization LIKE ? OR email LIKE ?`;
-        
-        db.query(countSql, [searchTerm, searchTerm, searchTerm, searchTerm], (err, countResults) => {
+        db.query(countSql, queryParams.slice(0, -2), (err, countResults) => {
             if (err) {
-                return res.status(500).json({ message: 'Database error' });
+                return res.status(500).json({ message: 'Database error', error: err });
             }
 
             const totalDoctors = countResults[0].total;
@@ -90,7 +114,7 @@ const getDoctorsList = (req, res) => {
             return res.json({
                 doctors: results,
                 pagination: {
-                    currentPage: page,
+                    currentPage: Number(page),
                     totalPages: totalPages,
                     totalDoctors: totalDoctors
                 }

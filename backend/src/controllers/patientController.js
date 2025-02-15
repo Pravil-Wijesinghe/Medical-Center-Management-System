@@ -11,7 +11,7 @@ const getPatientDetails = (req, res) => {
     const sql = `
         SELECT 
             patient.patientId, patient.firstName, patient.lastName, patient.address, patient.phoneNumber, patient.email,
-            user.userId, user.username, user.password, user.profilePicture
+            user.userId, user.username, user.password, user.profilePicture, user.isDelete
         FROM patient
         INNER JOIN user ON patient.userId = user.userId
         WHERE patient.patientId = ?
@@ -31,49 +31,57 @@ const getPatientDetails = (req, res) => {
 };
 
 const getPatientsList = (req, res) => {
-    console.log("Get Patients List API Hit");
-
-    const { page = 1, limit = 10, search = '' } = req.body;
+    let { page = 1, limit = 10, search = '', isDelete } = req.body;
     const offset = (page - 1) * limit;
     const searchTerm = `%${search}%`;
 
-    // SQL query to get patients with search and pagination
-    const sql = `
+    // Base query
+    let sql = `
         SELECT 
             patient.patientId, patient.firstName, patient.lastName, patient.address, patient.phoneNumber, patient.email,
-            user.userId, user.username, user.profilePicture
+            user.userId, user.username, user.profilePicture, user.isDelete
         FROM patient
         INNER JOIN user ON patient.userId = user.userId
         WHERE 
-            patient.firstName LIKE ? 
-            OR patient.lastName LIKE ? 
-            OR patient.phoneNumber LIKE ? 
-            OR patient.email LIKE ? 
-            OR user.username LIKE ?
-        LIMIT ? OFFSET ?
-    `;
-
-    db.query(sql, [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, limit, offset], (err, results) => {
-        if (err) {
-            return res.status(500).json({ message: 'Database error' });
-        }
-
-        // Get the total number of patients for pagination
-        const countSql = `
-            SELECT COUNT(*) AS total 
-            FROM patient
-            INNER JOIN user ON patient.userId = user.userId
-            WHERE 
-                patient.firstName LIKE ? 
+            (   patient.firstName LIKE ? 
                 OR patient.lastName LIKE ? 
                 OR patient.phoneNumber LIKE ? 
                 OR patient.email LIKE ? 
                 OR user.username LIKE ?
-        `;
+            )
+    `;
 
-        db.query(countSql, [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm], (err, countResults) => {
+    let countSql = `
+        SELECT COUNT(*) AS total 
+        FROM patient
+        INNER JOIN user ON patient.userId = user.userId
+        WHERE 
+            (patient.firstName LIKE ? 
+            OR patient.lastName LIKE ? 
+            OR patient.phoneNumber LIKE ? 
+            OR patient.email LIKE ? 
+            OR user.username LIKE ?)
+    `;
+
+    // If isDelete is provided (not null/undefined), filter by it
+    let queryParams = [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm];
+    if (isDelete !== undefined && isDelete !== null) {
+        sql += " AND user.isDelete = ?";
+        countSql += " AND user.isDelete = ?";
+        queryParams.push(isDelete);
+    }
+
+    sql += " LIMIT ? OFFSET ?";
+    queryParams.push(Number(limit), Number(offset));
+
+    db.query(sql, queryParams, (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error', error: err });
+        }
+
+        db.query(countSql, queryParams.slice(0, -2), (err, countResults) => {
             if (err) {
-                return res.status(500).json({ message: 'Database error' });
+                return res.status(500).json({ message: 'Database error', error: err });
             }
 
             const totalPatients = countResults[0].total;
@@ -82,7 +90,7 @@ const getPatientsList = (req, res) => {
             return res.json({
                 patients: results,
                 pagination: {
-                    currentPage: page,
+                    currentPage: Number(page),
                     totalPages: totalPages,
                     totalPatients: totalPatients
                 }
@@ -134,4 +142,32 @@ const updatePatient = (req, res) => {
     });
 };
 
-module.exports = { getPatientDetails, getPatientsList, updatePatient };
+// Delete Patient by patientId
+const deletePatient = (req, res) => {
+    const patientId = req.params.patientId;
+
+    // Fetch the userId of the patient
+    const getUserIdQuery = `SELECT userId FROM patient WHERE patientId = ?`;
+    db.query(getUserIdQuery, [patientId], (err, results) => {
+        if (err) return res.status(500).json({ message: 'Database error while fetching userId' });
+        if (results.length === 0) return res.status(404).json({ message: 'Patient not found' });
+
+        const userId = results[0].userId;
+
+        // Update isDelete to true in the patient table
+        const updatePatientQuery = `UPDATE patient SET isDelete = true WHERE patientId = ?`;
+        db.query(updatePatientQuery, [patientId], (err) => {
+            if (err) return res.status(500).json({ message: 'Error updating patient record' });
+
+            // Update isDelete to true in the user table
+            const updateUserQuery = `UPDATE user SET isDelete = true WHERE userId = ?`;
+            db.query(updateUserQuery, [userId], (err) => {
+                if (err) return res.status(500).json({ message: 'Error updating user record' });
+
+                return res.status(200).json({ message: 'Patient deleted successfully' });
+            });
+        });
+    });
+};
+
+module.exports = { getPatientDetails, getPatientsList, updatePatient, deletePatient };
