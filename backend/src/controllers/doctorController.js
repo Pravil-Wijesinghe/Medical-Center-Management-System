@@ -219,4 +219,24 @@ const deleteDoctor = (req, res) => {
     });
 };
 
-module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor, deleteDoctor };
+const addAvailableTime = (req, res) => {
+    const { doctorId, availableDate, availableTime } = req.body;
+
+    if (!doctorId || !availableDate || !availableTime) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const sql = `
+        INSERT INTO doctor_availability (doctorId, availableDate, availableTime)
+        VALUES (?, ?, ?)
+    `;
+
+    db.query(sql, [doctorId, availableDate, availableTime], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        res.status(201).json({ message: "Availability added successfully", availabilityId: result.insertId });
+    });
+};
+
+module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor, deleteDoctor, addAvailableTime };
