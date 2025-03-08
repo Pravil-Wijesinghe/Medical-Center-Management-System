@@ -220,4 +220,111 @@ const getAppointmentsForPatient = (req, res) => {
     });
 };
 
-module.exports = { bookAppointment, getAppointmentsForDoctor, confirmAppointment, cancelAppointment, getAppointmentsForPatient };
+const getAppointments = (req, res) => {
+    const {
+        doctorName,
+        patientName,
+        appointmentDate,
+        timeSlot,
+        status,
+        roomNumber,
+        appointmentNumber,
+        page = 1,
+        limit = 10
+    } = req.body;  // Now getting parameters from request body instead of query string
+
+    const offset = (page - 1) * limit;
+
+    // Ensure limit and offset are integers
+    const intLimit = parseInt(limit, 10);
+    const intOffset = parseInt(offset, 10);
+
+    // Start building the SQL query
+    let sql = `
+        SELECT a.appointmentId, a.patientId, a.doctorId, a.availabilityId, a.roomId, a.date, a.timeSlot, a.status, a.appointmentNumber,
+               r.roomNumber, p.firstName AS patientFirstName, p.lastName AS patientLastName,
+               d.firstName AS doctorFirstName, d.lastName AS doctorLastName
+        FROM appointment a
+        JOIN rooms r ON a.roomId = r.roomId
+        JOIN patient p ON a.patientId = p.patientId
+        JOIN doctor d ON a.doctorId = d.doctorId
+        WHERE 1 = 1
+    `;
+
+    const params = [];
+
+    // Dynamically build the WHERE conditions based on provided search fields
+    if (doctorName) {
+        sql += " AND (d.firstName LIKE ? OR d.lastName LIKE ?)";
+        params.push(`%${doctorName}%`, `%${doctorName}%`);
+    }
+
+    if (patientName) {
+        sql += " AND (p.firstName LIKE ? OR p.lastName LIKE ?)";
+        params.push(`%${patientName}%`, `%${patientName}%`);
+    }
+
+    if (appointmentDate) {
+        sql += " AND a.date = ?";
+        params.push(appointmentDate);
+    }
+
+    if (timeSlot) {
+        sql += " AND a.timeSlot = ?";
+        params.push(timeSlot);
+    }
+
+    if (status) {
+        sql += " AND a.status = ?";
+        params.push(status);
+    }
+
+    if (roomNumber) {
+        sql += " AND r.roomNumber = ?";
+        params.push(roomNumber);
+    }
+
+    if (appointmentNumber) {
+        sql += " AND a.appointmentNumber = ?";
+        params.push(appointmentNumber);
+    }
+
+    // Add pagination
+    sql += " LIMIT ? OFFSET ?";
+    params.push(intLimit, intOffset);
+
+    // Query the database
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        // Step 2: Get total count of matching records for pagination
+        const countSql = `
+            SELECT COUNT(*) AS totalAppointments
+            FROM appointment a
+            JOIN rooms r ON a.roomId = r.roomId
+            JOIN patient p ON a.patientId = p.patientId
+            JOIN doctor d ON a.doctorId = d.doctorId
+            WHERE 1 = 1
+        `;
+
+        db.query(countSql, params, (err, countResults) => {
+            if (err) {
+                return res.status(500).json({ message: "Database error", error: err });
+            }
+
+            const totalAppointments = countResults[0].totalAppointments;
+            const totalPages = Math.ceil(totalAppointments / intLimit);
+
+            res.status(200).json({
+                appointments: results,
+                totalAppointments,
+                totalPages,
+                currentPage: page
+            });
+        });
+    });
+};
+
+module.exports = { bookAppointment, getAppointmentsForDoctor, confirmAppointment, cancelAppointment, getAppointmentsForPatient, getAppointments };
