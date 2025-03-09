@@ -1,5 +1,5 @@
 const express = require("express");
-const { bookAppointment, getAppointmentsForDoctor, confirmAppointment, cancelAppointment, getAppointmentsForPatient, getAppointments } = require("../controllers/appointmentController");
+const { bookAppointment, getAppointmentsForDoctor, confirmAppointment, cancelAppointment, getAppointmentsForPatient, getAppointments, getAppointmentDetails } = require("../controllers/appointmentController");
 const router = express.Router();
 
 router.post("/book", bookAppointment);
@@ -8,5 +8,6 @@ router.post("/confirm", confirmAppointment);
 router.post("/cancel", cancelAppointment);
 router.post("/list-patient", getAppointmentsForPatient);
 router.post("/all", getAppointments);
+router.get("/details", getAppointmentDetails);
 
 module.exports = router;

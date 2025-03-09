@@ -327,4 +327,51 @@ const getAppointments = (req, res) => {
     });
 };
 
-module.exports = { bookAppointment, getAppointmentsForDoctor, confirmAppointment, cancelAppointment, getAppointmentsForPatient, getAppointments };
+const getAppointmentDetails = (req, res) => {
+    const { appointmentId } = req.query; // Use req.query instead of req.params
+
+    if (!appointmentId) {
+        return res.status(400).json({ message: "Appointment ID is required" });
+    }
+
+    const query = `
+        SELECT 
+            a.appointmentId, 
+            a.date, 
+            a.timeSlot, 
+            a.status, 
+            a.appointmentNumber,
+            p.patientId, 
+            p.firstName AS patientFirstName, 
+            p.lastName AS patientLastName, 
+            p.address AS patientAddress, 
+            p.phoneNumber AS patientPhone, 
+            p.email AS patientEmail,
+            d.doctorId, 
+            d.firstName AS doctorFirstName, 
+            d.lastName AS doctorLastName, 
+            d.specialization AS doctorSpecialization, 
+            d.phoneNumber AS doctorPhone, 
+            d.email AS doctorEmail,
+            r.roomNumber
+        FROM appointment a
+        JOIN patient p ON a.patientId = p.patientId
+        JOIN doctor d ON a.doctorId = d.doctorId
+        JOIN rooms r ON a.roomId = r.roomId
+        WHERE a.appointmentId = ?;
+    `;
+
+    db.query(query, [appointmentId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "Appointment not found" });
+        }
+
+        res.status(200).json(result[0]); // Return appointment details
+    });
+};
+
+module.exports = { bookAppointment, getAppointmentsForDoctor, confirmAppointment, cancelAppointment, getAppointmentsForPatient, getAppointments, getAppointmentDetails };
