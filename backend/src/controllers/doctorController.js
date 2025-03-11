@@ -242,4 +242,16 @@ const addAvailableTime = (req, res) => {
     });
 };
 
-module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor, deleteDoctor, addAvailableTime };
+const getDoctorCount = (req, res) => {
+    const query = `SELECT COUNT(*) AS totalDoctors FROM doctor`;
+
+    db.query(query, (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        res.status(200).json({ totalDoctors: result[0].totalDoctors });
+    });
+};
+
+module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor, deleteDoctor, addAvailableTime, getDoctorCount };
