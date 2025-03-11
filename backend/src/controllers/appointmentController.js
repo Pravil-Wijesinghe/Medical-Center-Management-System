@@ -374,4 +374,16 @@ const getAppointmentDetails = (req, res) => {
     });
 };
 
-module.exports = { bookAppointment, getAppointmentsForDoctor, confirmAppointment, cancelAppointment, getAppointmentsForPatient, getAppointments, getAppointmentDetails };
+const getAppointmentCount = (req, res) => {
+    const query = `SELECT COUNT(*) AS totalAppointments FROM appointment`;
+
+    db.query(query, (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        res.status(200).json({ totalAppointments: result[0].totalAppointments });
+    });
+};
+
+module.exports = { bookAppointment, getAppointmentsForDoctor, confirmAppointment, cancelAppointment, getAppointmentsForPatient, getAppointments, getAppointmentDetails, getAppointmentCount, };
