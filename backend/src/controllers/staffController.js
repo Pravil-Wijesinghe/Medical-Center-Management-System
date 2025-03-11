@@ -202,4 +202,39 @@ const deleteStaffMember = (req, res) => {
     });
 };
 
-module.exports = { addStaffMember, getStaffDetails, getStaffList, updateStaffMember, deleteStaffMember };
+const getStaffCount = (req, res) => {
+    const query = `SELECT COUNT(*) AS totalStaff FROM staff`;
+
+    db.query(query, (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        res.status(200).json({ totalStaff: result[0].totalStaff });
+    });
+};
+
+const getStaffCountByRole = (req, res) => {
+    const query = `
+        SELECT role, COUNT(*) AS count 
+        FROM staff 
+        WHERE role IN ('Nurse', 'Attendant', 'Cashier') 
+        GROUP BY role
+    `;
+
+    db.query(query, (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        // Convert the result into a key-value object
+        const roleCounts = {};
+        result.forEach(row => {
+            roleCounts[row.role] = row.count;
+        });
+
+        res.status(200).json(roleCounts);
+    });
+};
+
+module.exports = { addStaffMember, getStaffDetails, getStaffList, updateStaffMember, deleteStaffMember, getStaffCount, getStaffCountByRole };
