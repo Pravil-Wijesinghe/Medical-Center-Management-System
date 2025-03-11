@@ -18,6 +18,8 @@ const profileRoutes = require('./routes/profileRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const staffRoutes = require('./routes/staffRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
+const roomRoutes = require("./routes/roomRoutes");
+
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
@@ -26,10 +28,11 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/staff', staffRoutes);
-app.use('/api/appointments', require('./routes/appointmentRoutes'));
+app.use('/api/appointments', appointmentRoutes);
+app.use("/api/rooms", roomRoutes);
 
 // Start the Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
