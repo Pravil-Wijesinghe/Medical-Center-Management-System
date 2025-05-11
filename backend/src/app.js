@@ -20,6 +20,7 @@ const staffRoutes = require('./routes/staffRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const roomRoutes = require("./routes/roomRoutes");
 const systemlogsRoutes = require("./routes/systemlogsRoutes");
+const drugRoutes = require('./routes/drugRoutes');
 
 
 app.use('/api/users', userRoutes);
@@ -32,6 +33,7 @@ app.use('/api/staff', staffRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/systemlogs", systemlogsRoutes);
+app.use('/api/drugs', drugRoutes);
 
 // Start the Server
 const PORT = process.env.PORT;
