@@ -18,13 +18,16 @@ const bookAppointment = (req, res) => {
         return res.status(400).json({ message: "Invalid time slot" });
     }
 
+    // Step 1: Check doctor availability for the selected time slot
     const checkAvailabilitySql = `
         SELECT availabilityId FROM doctor_availability
         WHERE doctorId = ? AND startDate <= ? AND endDate >= ? AND availableTime = ?
     `;
 
     db.query(checkAvailabilitySql, [doctorId, date, date, timeSlot], (err, availabilityResults) => {
-        if (err) return res.status(500).json({ message: "Database error", error: err });
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
 
         if (availabilityResults.length === 0) {
             return res.status(404).json({ message: "No available slots found" });
@@ -32,77 +35,38 @@ const bookAppointment = (req, res) => {
 
         const availabilityId = availabilityResults[0].availabilityId;
 
+        // Step 2: Generate Appointment Number for the given doctor, date, and time slot
         const countAppointmentsSql = `
             SELECT COUNT(*) AS appointmentCount FROM appointment
             WHERE doctorId = ? AND date = ? AND timeSlot = ?
         `;
 
         db.query(countAppointmentsSql, [doctorId, date, timeSlot], (err, countResults) => {
-            if (err) return res.status(500).json({ message: "Database error", error: err });
+            if (err) {
+                return res.status(500).json({ message: "Database error", error: err });
+            }
 
             let appointmentNumber = countResults[0].appointmentCount + 1;
             if (appointmentNumber > maxAppointmentsForTime) {
                 return res.status(400).json({ message: "No more slots available for this time" });
             }
 
+            // Step 3: Create the appointment (without `time` column)
             const insertAppointmentSql = `
                 INSERT INTO appointment (patientId, doctorId, availabilityId, roomId, date, timeSlot, status, appointmentNumber)
                 VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?)
             `;
 
             db.query(insertAppointmentSql, [patientId, doctorId, availabilityId, roomId, date, timeSlot, appointmentNumber], (err, appointmentResult) => {
-                if (err) return res.status(500).json({ message: "Database error", error: err });
+                if (err) {
+                    return res.status(500).json({ message: "Database error", error: err });
+                }
 
-                const appointmentId = appointmentResult.insertId;
-
-                // 🔔 Step 4: Get userIds of patient and doctor
-                const getNamesAndUserIdsQuery = `
-                    SELECT 
-                        pUser.userId AS patientUserId,
-                        dUser.userId AS doctorUserId,
-                        CONCAT(p.firstName, ' ', p.lastName) AS patientName,
-                        CONCAT(d.firstName, ' ', d.lastName) AS doctorName
-                    FROM patient p
-                    JOIN user pUser ON p.userId = pUser.userId
-                    JOIN doctor d ON d.doctorId = ?
-                    JOIN user dUser ON d.userId = dUser.userId
-                    WHERE p.patientId = ?
-                `;
-
-                db.query(getNamesAndUserIdsQuery, [doctorId, patientId], (err, userRows) => {
-
-                    if (err || !userRows || !userRows[0]) {
-                        return res.status(201).json({
-                            message: "Appointment booked successfully, but failed to send notifications",
-                            appointmentId,
-                            appointmentNumber
-                        });
-                    }
-
-                    const { patientUserId, doctorUserId, patientName, doctorName } = userRows[0];
-
-                    const notifications = [
-                        [patientUserId, `Your appointment (ID: ${appointmentId}) with Dr. ${doctorName} is booked for ${date} (${timeSlot}).`],
-                        [doctorUserId, `You have a new appointment (ID: ${appointmentId}) scheduled with patient ${patientName} on ${date} (${timeSlot}).`]
-                    ];
-
-                    const notifyQuery = `INSERT INTO notifications (userId, message) VALUES ?`;
-
-                    db.query(notifyQuery, [notifications], (err2) => {
-                        if (err2) {
-                            return res.status(201).json({
-                                message: "Appointment booked, but notification failed",
-                                appointmentId,
-                                appointmentNumber
-                            });
-                        }
-
-                        res.status(201).json({
-                            message: "Appointment booked successfully, notifications sent",
-                            appointmentId,
-                            appointmentNumber
-                        });
-                    });
+                // Return success response
+                res.status(201).json({
+                    message: "Appointment booked successfully",
+                    appointmentId: appointmentResult.insertId,
+                    appointmentNumber
                 });
             });
         });
