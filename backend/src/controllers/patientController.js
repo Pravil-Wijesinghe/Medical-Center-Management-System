@@ -170,4 +170,16 @@ const deletePatient = (req, res) => {
     });
 };
 
-module.exports = { getPatientDetails, getPatientsList, updatePatient, deletePatient };
+const getPatientCount = (req, res) => {
+    const query = `SELECT COUNT(*) AS totalPatients FROM patient`;
+
+    db.query(query, (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        res.status(200).json({ totalPatients: result[0].totalPatients });
+    });
+};
+
+module.exports = { getPatientDetails, getPatientsList, updatePatient, deletePatient, getPatientCount };

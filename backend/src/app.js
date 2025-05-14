@@ -17,6 +17,13 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const staffRoutes = require('./routes/staffRoutes');
+const appointmentRoutes = require('./routes/appointmentRoutes');
+const roomRoutes = require("./routes/roomRoutes");
+const systemlogsRoutes = require("./routes/systemlogsRoutes");
+const drugRoutes = require('./routes/drugRoutes');
+const medicalRecordRoutes = require('./routes/medicalRecordRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
@@ -25,9 +32,15 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/staff', staffRoutes);
+app.use('/api/appointments', appointmentRoutes);
+app.use("/api/rooms", roomRoutes);
+app.use("/api/systemlogs", systemlogsRoutes);
+app.use('/api/drugs', drugRoutes);
+app.use('/api/medical-records', medicalRecordRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Start the Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

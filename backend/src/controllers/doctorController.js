@@ -219,4 +219,39 @@ const deleteDoctor = (req, res) => {
     });
 };
 
-module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor, deleteDoctor };
+const addAvailableTime = (req, res) => {
+    const { doctorId, startDate, endDate, availableTime } = req.body;
+
+    if (!doctorId || !startDate || !availableTime) {
+        return res.status(400).json({ message: "Doctor ID, start date, and available time are required" });
+    }
+
+    // If endDate is not provided, default it to startDate
+    const endDateValue = endDate && endDate !== "" ? endDate : startDate;
+
+    const sql = `
+        INSERT INTO doctor_availability (doctorId, startDate, endDate, availableTime)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(sql, [doctorId, startDate, endDateValue, availableTime], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        res.status(201).json({ message: "Availability added successfully", availabilityId: result.insertId });
+    });
+};
+
+const getDoctorCount = (req, res) => {
+    const query = `SELECT COUNT(*) AS totalDoctors FROM doctor`;
+
+    db.query(query, (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        res.status(200).json({ totalDoctors: result[0].totalDoctors });
+    });
+};
+
+module.exports = { addDoctorController, getDoctorDetails, getDoctorsList, updateDoctor, deleteDoctor, addAvailableTime, getDoctorCount };
