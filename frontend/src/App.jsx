@@ -2,17 +2,18 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import Navbar from "./layouts/NavBar";
 import Footer from "./layouts/Footer";
+import { Paper } from "@mui/material";
 
 function App() {
   return (
     <BrowserRouter>
-      <div>
+      <Paper sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.paper' }}>
         <Navbar />
         <main>
           <AppRoutes />
         </main>
         <Footer />
-      </div>
+      </Paper>
     </BrowserRouter>
   );
 }
