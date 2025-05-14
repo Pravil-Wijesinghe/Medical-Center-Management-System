@@ -6,9 +6,9 @@ import Footer from "./layouts/Footer";
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex flex-col min-h-screen">
+      <div>
         <Navbar />
-        <main className="flex-grow">
+        <main>
           <AppRoutes />
         </main>
         <Footer />
