@@ -3,6 +3,7 @@ import Hero from "../components/home/Hero";
 import NavBar from "../layouts/NavBar";
 import Footer from "../layouts/Footer";
 import AboutUs from "../components/home/AboutUs";
+import MeetDoctors from "../components/home/MeetDoctors";
 
 const Home = () => {
   return (
@@ -12,6 +13,7 @@ const Home = () => {
         <main>
           <Hero />
           <AboutUs />
+          <MeetDoctors />
         </main>
       </Paper>
       <Footer />
