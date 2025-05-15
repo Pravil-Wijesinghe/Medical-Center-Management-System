@@ -7,7 +7,7 @@ import logo from '../assets/logo.png';
 
 const Navbar = () => {
   return (
-    <AppBar position="static" color="background.paper" elevation={0} sx={{ px: 28, py: 1 }}>
+    <AppBar elevation={0} sx={{ px: 28, py: 0, backgroundColor: 'background.paper', color: 'black.main' }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Link to="/">
           <img src={logo} alt="Logo" height="40" />
@@ -19,8 +19,8 @@ const Navbar = () => {
           <Button component={Link} to="/contact-us" color="inherit">Contact Us</Button>
         </Box>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="outlined" color="primary" sx={{ borderRadius: 20, px: 4 }}>Sign Up</Button>
-          <Button variant="contained" color="primary" sx={{ borderRadius: 20, px: 4 }}>Sign In</Button>
+          <Button variant="outlined" color="primary" sx={{ borderRadius: 20, px: 4, textTransform: 'none' }}>Sign Up</Button>
+          <Button variant="contained" color="primary" sx={{ borderRadius: 20, px: 4, textTransform: 'none' }}>Sign In</Button>
         </Box>
       </Toolbar>
     </AppBar>

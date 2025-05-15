@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 
 const Footer = () => {
   return (
-    <Box sx={{ px: 28, py: 1, }}>
+    <Box sx={{ px: 28, py: 0, }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Box>
           <p>© {new Date().getFullYear()} MedConnect. All rights reserved.</p>
