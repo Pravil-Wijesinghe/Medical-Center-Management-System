@@ -2,6 +2,7 @@ import { Paper } from "@mui/material";
 import Hero from "../components/home/Hero";
 import NavBar from "../layouts/NavBar";
 import Footer from "../layouts/Footer";
+import AboutUs from "../components/home/AboutUs";
 
 const Home = () => {
   return (
@@ -10,6 +11,7 @@ const Home = () => {
       <Paper sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.paper' }}>
         <main>
           <Hero />
+          <AboutUs />
         </main>
       </Paper>
       <Footer />
