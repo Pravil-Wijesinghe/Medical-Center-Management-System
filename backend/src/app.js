@@ -5,8 +5,14 @@ const db = require('./config/db');
 
 const app = express();
 
+// Configure CORS with specific options
+const corsOptions = {
+  origin: 'http://localhost:5173', // Replace with your frontend origin
+  credentials: true, // Allow credentials
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json()); 
 
 // Import Routes
