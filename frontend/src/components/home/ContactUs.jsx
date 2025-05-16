@@ -3,6 +3,8 @@ import { Box, Typography } from '@mui/material';
 import { LocationOn, Phone, Email } from '@mui/icons-material';
 import CustomTextField from '../CustomTextField';
 import PrimaryButton from '../PrimaryButton';
+import emailjs from 'emailjs-com';
+import Swal from 'sweetalert2';
 
 function ContactUs() {
   const [formData, setFormData] = useState({
@@ -14,6 +16,18 @@ function ContactUs() {
   const [errors, setErrors] = useState({
     email: '',
   });
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-right',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+    });
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,8 +56,34 @@ function ContactUs() {
       setErrors({ ...errors, email: 'Please enter a valid email address.' });
       return;
     }
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
+
+    // Use EmailJS to send the email
+    emailjs.send(
+      'service_wberjl9', // Replace with your EmailJS service ID
+      'template_u2ayfr6', // Replace with your EmailJS template ID
+      formData,
+      '0YTDbdgx0bNXNIn6-' // Replace with your EmailJS user ID
+    )
+    .then((result) => {
+      console.log('Email successfully sent!', result.text);
+      Toast.fire({
+        icon: 'success',
+        title: 'Email successfully sent!',
+      });
+    }, (error) => {
+      console.log('Failed to send email:', error.text);
+      Toast.fire({
+        icon: 'error',
+        title: 'Failed to send email:',
+      });
+    });
+
+    // Reset form data after submission
+    setFormData({
+      name: '',
+      email: '',
+      message: '',
+    });
   };
 
   return (
