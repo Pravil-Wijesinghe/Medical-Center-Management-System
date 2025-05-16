@@ -5,6 +5,7 @@ import Footer from "../layouts/Footer";
 import AboutUs from "../components/home/AboutUs";
 import MeetDoctors from "../components/home/MeetDoctors";
 import Services from "../components/home/Services";
+import ContactUs from "../components/home/ContactUs";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
           <AboutUs />
           <MeetDoctors />
           <Services />
+          <ContactUs />
         </main>
       </Paper>
       <Footer />
