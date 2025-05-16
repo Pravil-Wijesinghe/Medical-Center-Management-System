@@ -4,6 +4,7 @@ import NavBar from "../layouts/NavBar";
 import Footer from "../layouts/Footer";
 import AboutUs from "../components/home/AboutUs";
 import MeetDoctors from "../components/home/MeetDoctors";
+import Services from "../components/home/Services";
 
 const Home = () => {
   return (
@@ -14,6 +15,7 @@ const Home = () => {
           <Hero />
           <AboutUs />
           <MeetDoctors />
+          <Services />
         </main>
       </Paper>
       <Footer />
