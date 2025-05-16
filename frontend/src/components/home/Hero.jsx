@@ -1,5 +1,7 @@
 import { Box, Typography, Button } from '@mui/material';
 import backgroundImg from '../../assets/bg-img-1.png';
+import PrimaryButton from '../PrimaryButton';
+import SecondaryButton from '../SecondaryButton';
 
 function Hero() {
   return (
@@ -31,26 +33,12 @@ function Hero() {
                 needs.
             </Typography>
             <Box sx={{ display: 'flex', gap: 4, mt: 4 }}>
-                <Button
-                    variant='contained'
-                    sx={{
-                        textTransform: 'none',
-                        borderRadius: 20,
-                        px: 4
-                    }}
-                >
+                <PrimaryButton>
                     Make an appointment
-                </Button>
-                <Button
-                    variant='outlined'
-                    sx={{
-                        textTransform: 'none',
-                        borderRadius: 20,
-                        px: 4
-                    }}
-                >
+                </PrimaryButton>
+                <SecondaryButton>
                     Meet Doctor
-                </Button>
+                </SecondaryButton>
             </Box>
         </Box>
     </Box>
