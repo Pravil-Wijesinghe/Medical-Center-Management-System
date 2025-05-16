@@ -14,7 +14,8 @@ const DoctorCard = ({ name, specialty, email, image }) => (
       margin: 1,
       borderRadius: 4,
       boxShadow: 3,
-      width: 200, // Fixed width for each card
+      width: 331,
+      height: 331,
     }}
   >
     <CardMedia
@@ -22,15 +23,15 @@ const DoctorCard = ({ name, specialty, email, image }) => (
       image={image}
       alt={name}
       sx={{
-        width: 120,
-        height: 120,
+        width: 180,
+        height: 180,
         borderRadius: '50%',
         border: '2px solid #4CAF50',
-        marginBottom: 2,
+        marginBottom: 1,
       }}
     />
     <Typography variant="h6" align="center">
-      {name}
+      Dr. {name}
     </Typography>
     <Typography variant="body2" align="center" color="text.secondary">
       {email}
