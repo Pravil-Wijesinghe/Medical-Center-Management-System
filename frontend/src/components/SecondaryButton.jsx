@@ -6,14 +6,10 @@ function SecondaryButton({ children, ...props }) {
     <Button
       variant="outlined"
       sx={{
-        borderColor: 'green',
-        color: 'green',
-        borderRadius: '20px',
-        padding: '10px 20px',
-        '&:hover': {
-          borderColor: '#00695c',
-          backgroundColor: 'rgba(0, 105, 92, 0.04)',
-        },
+        textTransform: 'none',
+        borderRadius: 20,
+        px: 4,
+        my: 4,
       }}
       {...props}
     >

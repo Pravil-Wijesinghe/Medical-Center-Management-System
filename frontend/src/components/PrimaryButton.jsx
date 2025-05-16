@@ -6,13 +6,10 @@ function PrimaryButton({ children, ...props }) {
     <Button
       variant="contained"
       sx={{
-        backgroundColor: 'green',
-        color: 'white',
-        borderRadius: '20px',
-        padding: '10px 20px',
-        '&:hover': {
-          backgroundColor: '#00695c',
-        },
+        textTransform: 'none',
+        borderRadius: 20,
+        px: 4,
+        my: 4,
       }}
       {...props}
     >
