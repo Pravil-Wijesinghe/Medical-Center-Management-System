@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Box, TextField, Button, Typography } from '@mui/material';
 import { LocationOn, Phone, Email } from '@mui/icons-material';
+import CustomTextField from '../CustomTextField';
+import PrimaryButton from '../PrimaryButton';
 
 function ContactUs() {
 
@@ -37,42 +39,30 @@ function ContactUs() {
         </Typography>
         <Box sx={{ width: 'full', display: 'flex', flexDirection: 'row' }}>
             <Box  component="form" onSubmit={handleSubmit} sx={{ p: 3, width: '40%' }}>
-                <TextField
+                <CustomTextField
                     label="Your Name"
-                    name="name"
+                    placeholder="Enter Your Name"
+                    required={true}
                     value={formData.name}
                     onChange={handleChange}
-                    fullWidth
-                    size='small'
-                    margin="normal"
-                    required
                 />
-                <TextField
+                <CustomTextField
                     label="Your Email"
-                    name="email"
+                    placeholder="Enter Your Email"
                     type="email"
+                    required={true}
                     value={formData.email}
                     onChange={handleChange}
-                    fullWidth
-                    size='small'
-                    margin="normal"
-                    required
                 />
-                <TextField
-                    label="Message"
-                    name="message"
-                    value={formData.message}
+                <CustomTextField
+                    label="Your Password"
+                    placeholder="Enter Your Password"
+                    type="password"
+                    required={true}
+                    value={formData.password}
                     onChange={handleChange}
-                    fullWidth
-                    size='small'
-                    margin="normal"
-                    multiline
-                    rows={4}
-                    required
                 />
-                <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                    Submit Message
-                </Button>
+                <PrimaryButton>Submit Message</PrimaryButton>
             </Box>
             <Box sx={{ p: 3, width: '60%' }}>
                 <Box
