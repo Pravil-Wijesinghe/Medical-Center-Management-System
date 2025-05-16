@@ -26,7 +26,7 @@ const DoctorCard = ({ name, specialty, email, image }) => (
         width: 180,
         height: 180,
         borderRadius: '50%',
-        border: '2px solid #4CAF50',
+        border: '4px solid #4CAF50',
         marginBottom: 1,
       }}
     />
@@ -56,10 +56,8 @@ function MeetDoctors() {
           search: '',
           softDelete: false,
         };
-        console.log('Filter Data:', filterData);
         const response = await getDoctorList(filterData);
         setDoctors(response.data.doctors);
-        console.log('Doctors:', response.data.doctors);
 
         // Fetch profile pictures for each doctor
         const urls = {};

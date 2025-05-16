@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Box } from '@mui/material';
 
-function CustomTextField({ label, placeholder, type = 'text', required = false, ...props }) {
+function CustomTextField({ label, placeholder, type = 'text', required = false, name, value, onChange, multiline = false, rows = 1, ...props }) {
   return (
     <Box sx={{ margin: 'auto', mt: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -15,6 +15,11 @@ function CustomTextField({ label, placeholder, type = 'text', required = false, 
         variant="outlined"
         type={type}
         required={required}
+        name={name}
+        value={value}
+        onChange={onChange}
+        multiline={multiline}
+        rows={rows}
         sx={{
           '& .MuiOutlinedInput-root': {
             borderRadius: 2,
