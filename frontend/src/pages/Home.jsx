@@ -6,6 +6,7 @@ import AboutUs from "../components/home/AboutUs";
 import MeetDoctors from "../components/home/MeetDoctors";
 import Services from "../components/home/Services";
 import ContactUs from "../components/home/ContactUs";
+import Ads from "../components/home/Ads";
 
 const Home = () => {
   return (
@@ -18,6 +19,7 @@ const Home = () => {
           <MeetDoctors />
           <Services />
           <ContactUs />
+          <Ads />
         </main>
       </Paper>
       <Footer />
