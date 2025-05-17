@@ -1,19 +1,19 @@
 import { Box, Toolbar } from "@mui/material";
-import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 
-const Footer = () => {
+const Footer = ({ scrollToHero, scrollToAboutUs, scrollToServices, scrollToContactUs }) => {
   return (
-    <Box sx={{ px: 28, py: 0, }}>
+    <Box sx={{ px: 28, py: 0 }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Box>
           <p>© {new Date().getFullYear()} MedConnect. All rights reserved.</p>
         </Box>
         <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button component={Link} to="/" color="inherit">Home</Button>
-            <Button component={Link} to="/about-us" color="inherit">About Us</Button>
-            <Button component={Link} to="/services" color="inherit">Services</Button>
-            <Button component={Link} to="/contact-us" color="inherit">Contact Us</Button>
+          <Button color="inherit" onClick={scrollToHero}>Home</Button>
+          <Button color="inherit" onClick={scrollToAboutUs}>About Us</Button>
+          {/* <Button color="inherit" onClick={scrollToMeetDoctors}>Meet Doctors</Button> */}
+          <Button color="inherit" onClick={scrollToServices}>Services</Button>
+          <Button color="inherit" onClick={scrollToContactUs}>Contact Us</Button>
         </Box>
       </Toolbar>
     </Box>

@@ -7,7 +7,7 @@ import logo from '../assets/logo.png';
 import PrimaryButton from '../components/PrimaryButton';
 import SecondaryButton from '../components/SecondaryButton';
 
-const Navbar = () => {
+const Navbar = ({ scrollToHero, scrollToAboutUs, scrollToServices, scrollToContactUs }) => {
   return (
     <AppBar elevation={0} sx={{ px: 28, py: 0, backgroundColor: 'background.paper', color: 'black.main', maxHeight: 70 }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -15,10 +15,11 @@ const Navbar = () => {
           <img src={logo} alt="Logo" height="40" />
         </Link>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button component={Link} to="/" color="inherit">Home</Button>
-          <Button component={Link} to="/about-us" color="inherit">About Us</Button>
-          <Button component={Link} to="/services" color="inherit">Services</Button>
-          <Button component={Link} to="/contact-us" color="inherit">Contact Us</Button>
+          <Button color="inherit" onClick={scrollToHero}>Home</Button>
+          <Button color="inherit" onClick={scrollToAboutUs}>About Us</Button>
+          {/* <Button color="inherit" onClick={scrollToMeetDoctors}>Meet Doctors</Button> */}
+          <Button color="inherit" onClick={scrollToServices}>Services</Button>
+          <Button color="inherit" onClick={scrollToContactUs}>Contact Us</Button>
         </Box>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <SecondaryButton>Sign Up</SecondaryButton>

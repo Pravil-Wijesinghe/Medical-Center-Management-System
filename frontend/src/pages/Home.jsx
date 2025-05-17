@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Paper } from "@mui/material";
 import Hero from "../components/home/Hero";
 import NavBar from "../layouts/NavBar";
@@ -10,21 +11,45 @@ import Ads from "../components/home/Ads";
 import HomeFooter from "../components/home/Footer";
 
 const Home = () => {
+  const heroRef = useRef(null);
+  const aboutUsRef = useRef(null);
+  const meetDoctorsRef = useRef(null);
+  const servicesRef = useRef(null);
+  const contactUsRef = useRef(null);
+
+  const scrollToSection = (ref) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <Paper sx={{ width: '100%', position: 'relative' }}>
-      <NavBar  position='relative' sx={{ width: '100%', top: 0, left: 0 }} />
+      <NavBar
+        scrollToHero={() => scrollToSection(heroRef)}
+        scrollToAboutUs={() => scrollToSection(aboutUsRef)}
+        scrollToMeetDoctors={() => scrollToSection(meetDoctorsRef)}
+        scrollToServices={() => scrollToSection(servicesRef)}
+        scrollToContactUs={() => scrollToSection(contactUsRef)}
+      />
       <Paper sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.paper' }}>
         <main>
-          <Hero />
-          <AboutUs />
-          <MeetDoctors />
-          <Services />
+          <div ref={heroRef}><Hero /></div>
+          <div ref={aboutUsRef}><AboutUs /></div>
+          <div ref={meetDoctorsRef}><MeetDoctors /></div>
+          <div ref={servicesRef}><Services /></div>
           <Ads />
-          <ContactUs />
-          <HomeFooter/>
+          <div ref={contactUsRef}><ContactUs /></div>
+          <HomeFooter />
         </main>
       </Paper>
-      <Footer />
+      <Footer
+        scrollToHero={() => scrollToSection(heroRef)}
+        scrollToAboutUs={() => scrollToSection(aboutUsRef)}
+        scrollToMeetDoctors={() => scrollToSection(meetDoctorsRef)}
+        scrollToServices={() => scrollToSection(servicesRef)}
+        scrollToContactUs={() => scrollToSection(contactUsRef)}
+      />
     </Paper>
   );
 };
