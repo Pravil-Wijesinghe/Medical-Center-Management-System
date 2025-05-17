@@ -34,7 +34,7 @@ const Home = () => {
       />
       <Paper sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.paper' }}>
         <main>
-          <div ref={heroRef}><Hero /></div>
+          <div ref={heroRef}><Hero scrollToMeetDoctors={() => scrollToSection(meetDoctorsRef)} /></div>
           <div ref={aboutUsRef}><AboutUs /></div>
           <div ref={meetDoctorsRef}><MeetDoctors /></div>
           <div ref={servicesRef}><Services /></div>
