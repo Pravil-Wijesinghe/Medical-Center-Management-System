@@ -12,7 +12,7 @@ function Ads() {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: 10,
+            my: 10,
         }}
     >
      <Typography variant="h2" color='white' sx={{ fontWeight: 'bold', color: 'white' }}>

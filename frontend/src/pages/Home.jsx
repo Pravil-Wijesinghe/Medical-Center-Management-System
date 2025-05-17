@@ -7,6 +7,7 @@ import MeetDoctors from "../components/home/MeetDoctors";
 import Services from "../components/home/Services";
 import ContactUs from "../components/home/ContactUs";
 import Ads from "../components/home/Ads";
+import HomeFooter from "../components/home/Footer";
 
 const Home = () => {
   return (
@@ -20,6 +21,7 @@ const Home = () => {
           <Services />
           <ContactUs />
           <Ads />
+          <HomeFooter/>
         </main>
       </Paper>
       <Footer />
