@@ -100,7 +100,6 @@ function MeetDoctors() {
           flexWrap: 'wrap',
           p: 4,
           gap: 2,
-          maxWidth: 900, // Adjust this value to fit your layout needs
           margin: 'auto', // Center the container
         }}
       >
