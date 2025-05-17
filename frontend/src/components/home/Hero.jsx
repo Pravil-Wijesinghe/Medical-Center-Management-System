@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import backgroundImg from '../../assets/bg-img-1.png';
 import PrimaryButton from '../PrimaryButton';
 import SecondaryButton from '../SecondaryButton';
+import Typewriter from 'typewriter-effect';
 
 function Hero({ scrollToMeetDoctors }) {
   return (
@@ -25,8 +26,24 @@ function Hero({ scrollToMeetDoctors }) {
           width: '50%',
         }}
       >
-        <Typography sx={{ fontSize: 84, fontWeight: 300, mb: -4 }}>Welcome to</Typography>
-        <Typography sx={{ fontSize: 84, fontWeight: 700, mb: 2 }}>Med Connect</Typography>
+        <Typography sx={{ fontSize: 84, fontWeight: 300, mb: -4 }}>
+          <Typewriter
+            options={{
+              strings: ['Welcome to'],
+              autoStart: true,
+              loop: true,
+            }}
+          />
+        </Typography>
+        <Typography sx={{ fontSize: 84, fontWeight: 700, mb: 2 }}>
+          <Typewriter
+            options={{
+              strings: ['Med Connect'],
+              autoStart: true,
+              loop: true,
+            }}
+          />
+        </Typography>
         <Typography sx={{ fontSize: 20, fontWeight: 400 }} align="justify">
           Welcome to Med Connect! We are excited to introduce our state-of-the-art Medical Center Management System, designed to streamline your healthcare experience.
           Whether you are a patient seeking efficient appointment scheduling or a healthcare professional aiming to enhance your practice, our system is here to meet your
