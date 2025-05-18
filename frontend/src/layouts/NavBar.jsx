@@ -22,7 +22,7 @@ const Navbar = ({ scrollToHero, scrollToAboutUs, scrollToServices, scrollToConta
           <Button color="inherit" onClick={scrollToContactUs}>Contact Us</Button>
         </Box>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <SecondaryButton>Sign Up</SecondaryButton>
+          <SecondaryButton href='/signup'>Sign Up</SecondaryButton>
           <PrimaryButton>Sign In</PrimaryButton>
         </Box>
       </Toolbar>
