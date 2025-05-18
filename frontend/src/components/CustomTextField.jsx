@@ -33,6 +33,13 @@ function CustomTextField({ label, placeholder, type = 'text', required = false, 
             '&.Mui-focused fieldset': {
               borderColor: 'grey',
             },
+            // Adjust the height of the input field
+            '& input': {
+              padding: '10px 14px', // Adjust padding to change height
+            },
+            '& textarea': {
+              padding: '12px 14px', // Adjust padding to change height for multiline
+            },
           },
         }}
         {...props}
