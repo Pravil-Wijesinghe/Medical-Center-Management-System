@@ -23,15 +23,15 @@ function CustomTextField({ label, placeholder, type = 'text', required = false, 
         sx={{
           '& .MuiOutlinedInput-root': {
             borderRadius: 2,
-            backgroundColor: '#f5f5f5',
+            backgroundColor: 'white',
             '& fieldset': {
-              borderColor: 'transparent',
+              borderColor: 'grey',
             },
             '&:hover fieldset': {
-              borderColor: 'transparent',
+              borderColor: 'grey',
             },
             '&.Mui-focused fieldset': {
-              borderColor: 'transparent',
+              borderColor: 'grey',
             },
           },
         }}
