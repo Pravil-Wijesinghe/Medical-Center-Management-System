@@ -2,6 +2,13 @@ import React from 'react';
 import { TextField, Box } from '@mui/material';
 
 function CustomTextField({ label, placeholder, type = 'text', required = false, name, value, onChange, multiline = false, rows = 1, ...props }) {
+
+    const handleKeyDown = (e) => {
+    if (type === 'tel' && !/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Box sx={{ margin: 'auto', mt: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -17,6 +24,7 @@ function CustomTextField({ label, placeholder, type = 'text', required = false, 
         required={required}
         name={name}
         value={value}
+        onKeyDown={handleKeyDown}
         onChange={onChange}
         multiline={multiline}
         rows={rows}
