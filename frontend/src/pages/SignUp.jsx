@@ -20,6 +20,8 @@ function SignUp() {
   const [errors, setErrors] = useState({
     phonenummber: '',
     email: '',
+    password: '',
+    confirmpassword: '',
   });
 
   const validatePhoneNumber = (phoneNumber) => {
@@ -30,6 +32,11 @@ function SignUp() {
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
+  };
+
+  const validatePassword = (password) => {
+    // Example: Validates that the password is at least 8 characters long
+    return password.length >= 8;
   };
 
   const handleChange = (e) => {
@@ -52,6 +59,22 @@ function SignUp() {
         setErrors({ ...errors, email: 'Please enter a valid email address.' });
       } else {
         setErrors({ ...errors, email: '' });
+      }
+    }
+
+    if (name === 'password') {
+      if (!validatePassword(value)) {
+        setErrors({ ...errors, password: 'Password must be at least 8 characters long.' });
+      } else {
+        setErrors({ ...errors, password: '' });
+      }
+    }
+
+    if (name === 'confirmpassword') {
+      if (value !== formData.password) {
+        setErrors({ ...errors, confirmpassword: 'Passwords do not match.' });
+      } else {
+        setErrors({ ...errors, confirmpassword: '' });
       }
     }
   };
@@ -187,6 +210,8 @@ function SignUp() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
               />
             </Grid>
             <Grid size={6}>
@@ -198,6 +223,8 @@ function SignUp() {
                 name="confirmpassword"
                 value={formData.confirmpassword}
                 onChange={handleChange}
+                error={!!errors.confirmpassword}
+                helperText={errors.confirmpassword}
               />
             </Grid>
             <Grid size={6}>

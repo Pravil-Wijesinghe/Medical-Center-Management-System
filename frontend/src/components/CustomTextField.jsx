@@ -1,7 +1,18 @@
-import React from 'react';
-import { TextField, Box } from '@mui/material';
+import { useState } from 'react';
+import { TextField, Box, InputAdornment, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 function CustomTextField({ label, placeholder, type = 'text', required = false, name, value, onChange, multiline = false, rows = 1, ...props }) {
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     const handleKeyDown = (e) => {
     if (type === 'tel' && !/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
@@ -20,7 +31,7 @@ function CustomTextField({ label, placeholder, type = 'text', required = false, 
         fullWidth
         placeholder={placeholder}
         variant="outlined"
-        type={type}
+        type={type === 'password' && !showPassword ? 'password' : 'text'}
         required={required}
         name={name}
         value={value}
@@ -28,6 +39,20 @@ function CustomTextField({ label, placeholder, type = 'text', required = false, 
         onChange={onChange}
         multiline={multiline}
         rows={rows}
+        InputProps={{
+          endAdornment: type === 'password' && (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
         sx={{
           '& .MuiOutlinedInput-root': {
             borderRadius: 2,
