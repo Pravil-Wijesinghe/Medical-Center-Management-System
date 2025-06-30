@@ -320,7 +320,7 @@ function SignUp() {
           <Typography sx={{ fontSize: 16, fontWeight: 400 }} align="center">
             Already have an account?
           </Typography>
-          <Button variant="text" sx={{ textTransform: 'none' }}>Login</Button>
+          <Button href="/login" variant="text" sx={{ textTransform: 'none' }}>Login</Button>
         </Box>
       </Box>
     </Paper>
