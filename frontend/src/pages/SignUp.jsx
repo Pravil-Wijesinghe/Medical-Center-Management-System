@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; 
+import { Box, Button, Grid, Paper, Typography, CircularProgress  } from '@mui/material';
+import Swal from 'sweetalert2';
 import backgroundImg from '../assets/sign-up-bg-img.png';
 import CustomTextField from '../components/CustomTextField';
 import PrimaryButton from '../components/PrimaryButton';
 import SecondaryButton from '../components/SecondaryButton';
+import authService from '../services/authService';
+import { validatePhoneNumber, validateEmail, validatePassword, validateForm } from '../utils/signupValidation';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -24,20 +28,13 @@ function SignUp() {
     confirmpassword: '',
   });
 
-  const validatePhoneNumber = (phoneNumber) => {
-    const re = /^[0-9]{10}$/; // Example: Validates a 10-digit phone number
-    return re.test(phoneNumber);
-  };
+  const [submitState, setSubmitState] = useState({
+    isLoading: false,
+    message: '',
+    type: '', // 'success' or 'error'
+  });
 
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
-
-  const validatePassword = (password) => {
-    // Example: Validates that the password is at least 8 characters long
-    return password.length >= 8;
-  };
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,18 +76,78 @@ function SignUp() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const showToast = (icon, title) => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'bottom-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      }
+    });
+
+    Toast.fire({
+      icon: icon,
+      title: title
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validatePhoneNumber(formData.phonenummber)) {
-      setErrors({ ...errors, phonenummber: 'Please enter a valid phone number.' });
+    
+    const { isValid, errors: newErrors } = validateForm(formData);
+    setErrors(newErrors);
+
+    if (!isValid) {
       return;
     }
-    if (!validateEmail(formData.email)) {
-      setErrors({ ...errors, email: 'Please enter a valid email address.' });
-      return;
+
+    setSubmitState({ isLoading: true, message: '', type: '' });
+
+    try {
+      // Prepare data for API (map form fields to API fields)
+      const apiData = {
+        firstName: formData.firstname,
+        lastName: formData.lastname,
+        username: formData.username,
+        address: formData.address,
+        phoneNumber: formData.phonenummber,
+        email: formData.email,
+        password: formData.password,
+      };
+
+      const result = await authService.signUpPatient(apiData);
+
+      if (result.success) {
+        showToast('success', result.message);
+
+        // Optional: Clear form after successful submission
+        setFormData({
+          firstname: '',
+          lastname: '',
+          username: '',
+          address: '',
+          phonenummber: '',
+          email: '',
+          password: '',
+          confirmpassword: '',
+        });
+
+        // Optional: Redirect to login page after a delay
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        showToast('error', result.error); 
+      }
+    } catch (error) {
+      showToast('error', error);
+    } finally {
+      setSubmitState({ isLoading: false, message: '', type: '' });
     }
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
   };
 
   return (
@@ -144,6 +201,8 @@ function SignUp() {
                 name="firstname"
                 value={formData.firstname}
                 onChange={handleChange}
+                error={!!errors.firstname}
+                helperText={errors.firstname}
               />
             </Grid>
             <Grid size={6}>
@@ -154,6 +213,8 @@ function SignUp() {
                 name="lastname"
                 value={formData.lastname}
                 onChange={handleChange}
+                error={!!errors.lastname}
+                helperText={errors.lastname}
               />
             </Grid>
             <Grid size={6}>
@@ -164,6 +225,8 @@ function SignUp() {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
+                error={!!errors.username}
+                helperText={errors.username}
               />
             </Grid>
             <Grid size={6}>
@@ -174,6 +237,8 @@ function SignUp() {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
+                error={!!errors.address}
+                helperText={errors.address}
               />
             </Grid>
             <Grid size={6}>
@@ -231,7 +296,14 @@ function SignUp() {
               <SecondaryButton fullWidth href="/">Back to Home</SecondaryButton>
             </Grid>
             <Grid size={6}>
-              <PrimaryButton fullWidth type="submit">Create an Account</PrimaryButton>
+              <PrimaryButton 
+                fullWidth 
+                type="submit" 
+                disabled={submitState.isLoading}
+                startIcon={submitState.isLoading ? <CircularProgress size={20} /> : null}
+              >
+                {submitState.isLoading ? 'Creating Account...' : 'Create an Account'}
+              </PrimaryButton>
             </Grid>
           </Grid>
         </form>
