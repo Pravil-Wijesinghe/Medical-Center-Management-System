@@ -45,15 +45,15 @@ class AuthService {
   }
 
   /**
-   * Login user (placeholder for future implementation)
+   * Login user
    * @param {Object} credentials - Login credentials
-   * @param {string} credentials.email - User's email
+   * @param {string} credentials.username - User's username
    * @param {string} credentials.password - User's password
    * @returns {Promise<Object>} Response data from the API
    */
   async login(credentials) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

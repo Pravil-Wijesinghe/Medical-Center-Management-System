@@ -23,7 +23,7 @@ const Navbar = ({ scrollToHero, scrollToAboutUs, scrollToServices, scrollToConta
         </Box>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <SecondaryButton href='/signup'>Sign Up</SecondaryButton>
-          <PrimaryButton>Sign In</PrimaryButton>
+          <PrimaryButton href='/login'>Sign In</PrimaryButton>
         </Box>
       </Toolbar>
     </AppBar>
