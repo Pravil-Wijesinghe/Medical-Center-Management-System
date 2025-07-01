@@ -45,11 +45,11 @@ const authSlice = createSlice({
     // Initialize auth state from localStorage on app start
     initializeAuth: (state) => {
       const token = authService.getToken();
+      const userData = authService.getUser();
       if (token) {
         state.token = token;
-        state.isAuthenticated = true;
-        // Note: You might want to decode the token to get user info
-        // or make an API call to get current user data
+        state.isAuthenticated = true; 
+        state.user = userData;
       }
     },
   },

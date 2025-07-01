@@ -71,6 +71,9 @@ class AuthService {
       if (data.token) {
         localStorage.setItem('authToken', data.token);
       }
+      if (data.user) {
+        localStorage.setItem('userData', JSON.stringify(data.user));
+      }
 
       return {
         success: true,
@@ -91,6 +94,7 @@ class AuthService {
    */
   logout() {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
   }
 
   /**
@@ -99,6 +103,15 @@ class AuthService {
    */
   getToken() {
     return localStorage.getItem('authToken');
+  }
+
+  /**
+   * Get stored user data
+   * @returns {Object|null} User data
+   */
+  getUser() {
+    const userData = localStorage.getItem('userData');
+    return userData ? JSON.parse(userData) : null;
   }
 
   /**

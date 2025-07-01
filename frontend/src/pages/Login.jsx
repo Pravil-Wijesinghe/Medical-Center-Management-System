@@ -93,7 +93,7 @@ function Login() {
 
         try {
         const result = await dispatch(loginUser(formData)).unwrap();
-        showToast('success', result.message);
+        showToast('success', result.message || 'Login successful!');
         navigate('/dashboard'); // Redirect to dashboard on successful login
         } catch (error) {
         showToast('error', error); 
