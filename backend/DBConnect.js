@@ -1,12 +1,5 @@
 const mysql = require('mysql');
 
-// const connection = mysql.createConnection({
-//     host: 'srv1327.hstgr.io',
-//     user: 'u323893650_pravil',
-//     password: 'Pravil#1234aa',
-//     database: 'u323893650_medical_center'
-// });
-
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
